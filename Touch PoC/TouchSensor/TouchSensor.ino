@@ -6,7 +6,7 @@
 #define RECEIVED 0x04
 
 #define FORWARD_SPEED 100
-#define BACKWARD_SPEED 200
+#define BACKWARD_SPEED 100
 
 Stepper stepper(64, 4, 5, 6 ,7);
 int movedSteps = 0;
@@ -15,6 +15,7 @@ void setup() {
   Serial.begin(9600);
   pinMode(TOUCH_SENSOR_PIN, INPUT_PULLUP);
   stepper.setSpeed(FORWARD_SPEED);
+  // stepper.step(-10000);
 }
 
 void loop() {

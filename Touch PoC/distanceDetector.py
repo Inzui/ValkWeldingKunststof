@@ -28,7 +28,7 @@ class DistanceDetector():
                 yCoordinates.extend(generatedYCoordinates)
         return [xCoordinates, yCoordinates]
 
-    def _detectObject(self) -> int:
+    def _detectObject(self) -> float:
         print("Detecting object...")
         try:
             receivedData = self.ser.read()
@@ -43,7 +43,7 @@ class DistanceDetector():
             movedSteps = self.ser.readline().decode()
 
             self.ser.write(Command.RECEIVED.value)
-            return int(movedSteps)
+            return float(movedSteps)
 
         except KeyboardInterrupt:
             self.ser.close()
