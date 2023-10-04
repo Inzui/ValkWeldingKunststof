@@ -1,0 +1,2 @@
+class CobotController():
+    pass

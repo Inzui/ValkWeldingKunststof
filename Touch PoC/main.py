@@ -1,4 +1,5 @@
 from distanceDetector import DistanceDetector
+from cobot import *
 
 class Main():
     def __init__(self, detectionService: DistanceDetector):
@@ -10,4 +11,4 @@ class Main():
 
 if __name__ == "__main__":
     main = Main(DistanceDetector("COM3"))
-    main.run()
+    # main.run()

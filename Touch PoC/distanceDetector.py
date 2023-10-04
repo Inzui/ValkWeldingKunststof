@@ -4,11 +4,13 @@ from command import Command
 
 class DistanceDetector():
     def __init__(self, serialPort: str, baudrate: int = 9600, calculationPoints: int = 5, calculationInterval: int = 10):
-        self.ser = serial.Serial(serialPort, baudrate, timeout=1)
+        self.serialPort = serialPort
+        self.baudrate = baudrate
         self.calculationPoints = calculationPoints
         self.calculationInterval = calculationInterval
 
-    def run(self) -> [[], []]:  
+    def run(self) -> [[], []]:
+        self.ser = serial.Serial(self.serialPort, self.baudrate, timeout=1)  
         xCoordinates, yCoordinates = [], []
         for i in range(self.calculationPoints):
             print("Give x in mm")
