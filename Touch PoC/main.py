@@ -1,19 +1,28 @@
-from distanceDetector import DistanceDetector
 from cobot import CobotController
+from distanceDetector.touchDetector import TouchDetector
 
 class Main():
-    def __init__(self, detectionService: DistanceDetector, cobotController: CobotController):
-        self.detectionService = detectionService
-        self.cobotController = cobotController
+    def __init__(self, controller):
+        self.controller = controller
+    
+    def start(self):
+        print("Starting main")
+        self.controller.start()
     
     def run(self):
-        self.cobotController.run()
-        # coordinates = self.detectionService.run()
-        # self.detectionService.plotPoints(coordinates[0], coordinates[1])
+        try:
+            pass
+        
+        except KeyboardInterrupt:
+            self.controller.stop()
+        except Exception as e:
+            self.controller.stop()
+            print(e)
 
 if __name__ == "__main__":
-    distanceDetector = DistanceDetector("COM3")
-    cobotController = CobotController()
+    detector = TouchDetector("COM3")
+    cobotController = CobotController(detector)
 
-    main = Main(distanceDetector, cobotController)
+    main = Main(cobotController)
+    main.start()
     main.run()

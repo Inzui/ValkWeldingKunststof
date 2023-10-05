@@ -1,8 +1,8 @@
 import serial, numpy
 import matplotlib.pyplot as plt
-from command import Command
+from distanceDetector.detectorCommand import DetectorCommand
 
-class DistanceDetector():
+class MotorizedDetector():
     def __init__(self, serialPort: str, baudrate: int = 9600, calculationPoints: int = 5, calculationInterval: int = 10):
         self.serialPort = serialPort
         self.baudrate = baudrate
@@ -35,16 +35,16 @@ class DistanceDetector():
         try:
             receivedData = self.ser.read()
             while (receivedData == b''):
-                self.ser.write(Command.START_MOVING.value)
+                self.ser.write(DetectorCommand.START_DETECTING.value)
                 receivedData = self.ser.read()
             
-            while (self.ser.read() == Command.UNKNOWN.value):
+            while (self.ser.read() == DetectorCommand.UNKNOWN.value):
                 pass
 
-            self.ser.write(Command.SEND_DISTANCE.value)
+            self.ser.write(DetectorCommand.SEND_DETECTION_VALUE.value)
             movedSteps = self.ser.readline().decode()
 
-            self.ser.write(Command.RECEIVED.value)
+            self.ser.write(DetectorCommand.RECEIVED.value)
             return float(movedSteps)
 
         except KeyboardInterrupt:
