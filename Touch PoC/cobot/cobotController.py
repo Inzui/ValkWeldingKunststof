@@ -1,4 +1,5 @@
 from distanceDetector.touchDetector import TouchDetector
+from cobot.EasyModbusPy.cobotConnect import CobotConnect
 
 class CobotController():
     def __init__(self, detector: TouchDetector, stepSize: float = 5.0):
@@ -10,9 +11,8 @@ class CobotController():
     def start(self):
         print("Starting controller")
         #Import here as it automatically tries to connect
-        # from cobot.EasyModbusPy.cobotconnect19216801 import cobotconnect
-        # self.cob = cobotconnect()
-        self.detector.connect()
+    
+        self.cob = CobotConnect()
         self.detector.start()
         self.hasStarted = True
     
@@ -37,8 +37,11 @@ class CobotController():
             if (stopOnDetection and self.detector.objectDetected):
                 return
             
+            self._checkStatus()
+
+            #-------------------------------------------------------#
             relativeMove = self._getRelativeMove(P, point)
-            self.cob.sendCobotMove(self._toText(relativeMove),speed)
+            self.cob.sendCobotMove(relativeMove, speed)
             P = self._cleanPoint(self.cob.readPos())
 
     def moveToDirect(self, point: list, speed: int):
@@ -47,11 +50,12 @@ class CobotController():
 
         point += self.headPos
         point = self._cleanPoint(point)
-        self.cob.sendCobotPos(self._toText(point),speed) 
+        self.cob.sendCobotPos(point, speed) 
 
         P = self._cleanPoint(self.cob.readPos())
 
         while not self._arrivedOnPos(P, point):
+            self._checkStatus()
             P = self._cleanPoint(self.cob.readPos())
 
     def _getRelativeMove(self, currentPos: list, desPos: list) -> list:
@@ -66,9 +70,6 @@ class CobotController():
         newPos[0], newPos[1] = newPos[1], newPos[0]
         return newPos
 
-    def _toText(self, P: list) -> list:
-        return str(P[0]) + " ,"  + str(P[1]) + " ,"  + str(P[2]) + " ,"  + str(P[3]) + " ,"  + str(P[4]) + " ,"  + str(P[5]) 
-
     def _arrivedOnPos(self, currentPos: list, desPos: list) -> bool:
         for i in range(len(currentPos)):
             if(currentPos[i] != desPos[i]):
@@ -79,3 +80,8 @@ class CobotController():
         for i in range(len(point)):
             point[i] = int(round(point[i], 0))
         return point
+    
+    def _checkStatus(self):
+        statusCode, statusText = self.cob.readError()
+        if(statusCode != 6):
+            raise Exception(statusText)
