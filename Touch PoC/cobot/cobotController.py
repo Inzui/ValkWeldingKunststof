@@ -1,5 +1,6 @@
 from distanceDetector.touchDetector import TouchDetector
 from cobot.EasyModbusPy.cobotConnect import CobotConnect
+import time
 
 class CobotController():
     def __init__(self, detector: TouchDetector, stepSize: float = 5.0):
@@ -10,9 +11,7 @@ class CobotController():
 
     def start(self):
         print("Starting controller")
-        #Import here as it automatically tries to connect
-    
-        self.cob = CobotConnect()
+        # self.cob = CobotConnect()
         self.detector.start()
         self.hasStarted = True
     

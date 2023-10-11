@@ -14,9 +14,9 @@ class Main():
     def run(self):
         try:
             while True:
-                print(self.controller.detectObject())
-            self.controller.moveToDirect([600, -250, 250], 100)
-            self.controller.moveToSteps([600, 0, 250], 100, True)
+                self.controller.detectObject()
+            # self.controller.moveToDirect([600, -250, 250], 100)
+            # self.controller.moveToSteps([600, 0, 250], 100, True)
         
         except KeyboardInterrupt:
             pass
@@ -27,8 +27,7 @@ class Main():
             sys.exit()
 
 if __name__ == "__main__":
-    #detector = TouchDetector("COM3")
-    detector = TestDetector()
+    detector = TouchDetector("COM3")
     cobotController = CobotController(detector, 20)
 
     main = Main(cobotController)

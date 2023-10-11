@@ -87,7 +87,7 @@ class CobotConnect():
         t = (x,y) #31544,16632 => 7.765041351318359, 56191,49724 => -47.214351654052734
         packed_string = struct.pack("HH", *t)
         unpacked_float = struct.unpack("f", packed_string)[0]
-        #print (unpacked_float)
+        return unpacked_float
 
     def toText(self, P: list) -> list:
         return str(P[0]) + " ,"  + str(P[1]) + " ,"  + str(P[2]) + " ,"  + str(P[3]) + " ,"  + str(P[4]) + " ,"  + str(P[5]) 
