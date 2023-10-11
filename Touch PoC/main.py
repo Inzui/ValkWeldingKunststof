@@ -11,17 +11,10 @@ class Main():
     
     def run(self):
         try:
-            # self.controller.moveToDirect([600, -250, 250], 100)
-
-            # for i in range(10):
-            #     self.controller.moveToSteps([600, 0, 250], 100)
-            #     self.controller.moveToSteps([600, -250, 500], 100)
-            #     self.controller.moveToSteps([350, 0, 500], 100)
-
-            # self.controller.moveToSteps([600, 0, 250], 100, True)
-
-            while (True):
+            while True:
                 print(self.controller.detectObject())
+            self.controller.moveToDirect([600, -250, 250], 100)
+            self.controller.moveToSteps([600, 0, 250], 100, True)
         
         except KeyboardInterrupt:
             pass

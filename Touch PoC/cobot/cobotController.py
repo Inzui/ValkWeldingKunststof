@@ -1,5 +1,7 @@
+from distanceDetector.touchDetector import TouchDetector
+
 class CobotController():
-    def __init__(self, detector, stepSize = 5):
+    def __init__(self, detector: TouchDetector, stepSize: float = 5.0):
         self.detector = detector
         self.hasStarted = False
         self.stepSize = stepSize
@@ -8,8 +10,9 @@ class CobotController():
     def start(self):
         print("Starting controller")
         #Import here as it automatically tries to connect
-        from cobot.EasyModbusPy.cobotconnect19216801 import cobotconnect
-        self.cob = cobotconnect()
+        # from cobot.EasyModbusPy.cobotconnect19216801 import cobotconnect
+        # self.cob = cobotconnect()
+        self.detector.connect()
         self.detector.start()
         self.hasStarted = True
     
@@ -18,12 +21,12 @@ class CobotController():
         self.detector.stop()
         self.hasStarted = False
         print("Stopped controller")
-    
-    def detectObject(self):
-        print(self.detector.detectObject())
 
-    def moveToSteps(self, point: list, speed: int):
-        if(not self.hasStarted):
+    def detectObject(self) -> bool:
+        return self.detector.objectDetected
+
+    def moveToSteps(self, point: list, speed: int, stopOnDetection: bool = False):
+        if (not self.hasStarted):
             raise Exception("Cobot has not been started.")
 
         point += self.headPos
@@ -31,12 +34,15 @@ class CobotController():
         P = self._cleanPoint(self.cob.readPos())
 
         while not self._arrivedOnPos(P, point):
+            if (stopOnDetection and self.detector.objectDetected):
+                return
+            
             relativeMove = self._getRelativeMove(P, point)
             self.cob.sendCobotMove(self._toText(relativeMove),speed)
             P = self._cleanPoint(self.cob.readPos())
 
     def moveToDirect(self, point: list, speed: int):
-        if(not self.hasStarted):
+        if (not self.hasStarted):
             raise Exception("Cobot has not been started.")
 
         point += self.headPos
