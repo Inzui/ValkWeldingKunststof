@@ -1,7 +1,7 @@
-from cobot import CobotController
-from distanceDetector.touchDetector import TouchDetector
-from distanceDetector.testDetector import TestDetector
-import sys
+# from cobot import CobotController
+# from distanceDetector.touchDetector import TouchDetector
+# from distanceDetector.testDetector import TestDetector
+# import sys
 
 class Main():
     def __init__(self, controller):
@@ -32,9 +32,12 @@ class Main():
 
 if __name__ == "__main__":
     #detector = TouchDetector("COM3")
-    detector = TestDetector()
-    cobotController = CobotController(detector, 20)
+    # detector = TestDetector()
+    # cobotController = CobotController(detector, 20)
 
-    main = Main(cobotController)
-    main.start()
-    main.run()
+    # main = Main(cobotController)
+    # main.start()
+    # main.run()
+
+    lst = (2,3)
+    print(*lst)
