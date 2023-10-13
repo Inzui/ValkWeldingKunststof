@@ -26,6 +26,8 @@ namespace ValkWelding.Welding.Touch_PoC
         {
             services.AddSingleton<MainWindow>();
             services.AddSingleton<IDistanceDetector, TouchDetector>();
+            services.AddSingleton<ICobotConnectionService, CobotConnectionService>();
+            services.AddSingleton<ICobotControllerService, CobotControllerService>();
 
             services.AddScoped<IDetectionService, DetectionService>();
         }

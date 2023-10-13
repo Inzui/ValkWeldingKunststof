@@ -19,10 +19,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
         public void Detect()
         {
-            while (true)
-            {
-                Debug.WriteLine(_distanceDetector.ObjectDetected);
-            }
+            Debug.WriteLine(_distanceDetector.ObjectDetected);
         }
     }
 }

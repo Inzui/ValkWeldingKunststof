@@ -21,17 +21,18 @@ namespace ValkWelding.Welding.Touch_PoC
     /// </summary>
     public partial class MainWindow : Window
     {
-        private IDetectionService _detectionService;
+        private ICobotControllerService _cob;
 
-        public MainWindow(IDetectionService detectionService)
+        public MainWindow(ICobotControllerService cobotControllerService)
         {
-            _detectionService = detectionService;
+            _cob = cobotControllerService;
             InitializeComponent();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            _detectionService.Detect();
+            float[] arr = { 600, -250, 250, -179, 0, -90};
+            _cob.moveToDirect(arr);
         }
     }
 }

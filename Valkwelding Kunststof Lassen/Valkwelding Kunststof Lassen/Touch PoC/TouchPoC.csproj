@@ -16,4 +16,10 @@
     <PackageReference Include="System.IO.Ports" Version="7.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="NModbus4">
+      <HintPath>NModbus4.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
