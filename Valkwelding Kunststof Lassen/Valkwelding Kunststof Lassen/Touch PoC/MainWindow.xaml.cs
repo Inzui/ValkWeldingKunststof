@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ValkWelding.Welding.Touch_PoC.Services;
 
 namespace ValkWelding.Welding.Touch_PoC
 {
@@ -20,14 +21,17 @@ namespace ValkWelding.Welding.Touch_PoC
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private IDetectionService _detectionService;
+
+        public MainWindow(IDetectionService detectionService)
         {
+            _detectionService = detectionService;
             InitializeComponent();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            // Doe dingen hier xxx
+            _detectionService.Detect();
         }
     }
 }
