@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Threading;
+using ValkWelding.Welding.Touch_PoC.Configuration;
 using ValkWelding.Welding.Touch_PoC.Types;
 
 namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
@@ -14,12 +16,12 @@ namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
         private readonly SerialPort _serialPort;
         private bool _connected;
 
-        public TouchDetector()
+        public TouchDetector(IOptions<LocalConfig> configuration)
         {
             _serialPort = new()
             {
-                PortName = "COM6",
-                BaudRate = 9600,
+                PortName = configuration.Value.DistanceDetectorSettings.ComPort,
+                BaudRate = configuration.Value.DistanceDetectorSettings.BaudRate
             };
             _serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPort_DataReceived);
             _connected = false;

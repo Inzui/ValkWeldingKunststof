@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Animation;
+using ValkWelding.Welding.Touch_PoC.Configuration;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
 {
@@ -18,12 +20,12 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         public int Speed { get; set; }
         public float StepSize { get; set; }
 
-        public CobotControllerService(ICobotConnectionService cobotConnect)
+        public CobotControllerService(IOptions<LocalConfig> configuration, ICobotConnectionService cobotConnect)
         {
-            this.StepSize = 20;
+            this.StepSize = configuration.Value.CobotSettings.MovementStepSize;
             this._precisionSize = 0;
             this._cob = cobotConnect;
-            Speed = 100;
+            Speed = configuration.Value.CobotSettings.MovementSpeed;
         }
 
         public void moveToSteps(float[] point)
