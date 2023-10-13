@@ -24,5 +24,10 @@ namespace ValkWelding.Welding.Touch_PoC
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            // Doe dingen hier xxx
+        }
     }
 }
