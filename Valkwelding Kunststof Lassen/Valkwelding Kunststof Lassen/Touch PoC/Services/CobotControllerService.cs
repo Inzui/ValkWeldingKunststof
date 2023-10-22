@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Media.Animation;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
@@ -20,8 +21,8 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
         public CobotControllerService(ICobotConnectionService cobotConnect)
         {
-            this.StepSize = 20;
-            this._precisionSize = 0;
+            this.StepSize = 5;
+            this._precisionSize = 2;
             this._cob = cobotConnect;
             Speed = 100;
         }
@@ -35,6 +36,10 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             {
                 _cob.sendCobotMove(getMove(currentPos, desPos), Speed);
                 currentPos = roundedPoint(_cob.readPos());
+                Thread.Sleep(1000);
+                Trace.WriteLine("--------------------");
+                printPoint(currentPos);
+                printPoint(desPos);
             }
         }
 
@@ -44,6 +49,8 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             float[] desPos = roundedPoint(point);
 
             _cob.sendCobotPos(desPos, Speed);
+
+            Trace.WriteLine(_cob.readError());
 
             while (!onPosition(currentPos, desPos))
             {
@@ -67,7 +74,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                 }
                 else if (currentPos[i] > desPos[i])
                 {
-                    newMove[i] = -StepSize;
+                    newMove[i] = StepSize;
                 }
             }
 
