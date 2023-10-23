@@ -1,20 +1,20 @@
 from cobot import CobotController
-from distanceDetector.touchDetector import TouchDetector
+from distanceDetector.motorizedDetector import MotorizedDetector
 from distanceDetector.testDetector import TestDetector
 import sys
 
 class Main():
-    def __init__(self, controller: CobotController):
+    def __init__(self, controller: MotorizedDetector):
         self.controller = controller
     
     def start(self):
         print("Starting main")
-        self.controller.start()
+        # self.controller.start()
     
     def run(self):
         try:
-            while True:
-                self.controller.detectObject()
+            xCoordinates, yCoordinates = self.controller.run()
+            self.controller.plotPoints(xCoordinates, yCoordinates)
             # self.controller.moveToDirect([600, -250, 250], 100)
             # self.controller.moveToSteps([600, 0, 250], 100, True)
         
@@ -23,13 +23,13 @@ class Main():
         except Exception as e:
             print(e)
         finally:
-            self.controller.stop()
+            # self.controller.stop()
             sys.exit()
 
 if __name__ == "__main__":
-    detector = TouchDetector("COM3")
-    cobotController = CobotController(detector, 20)
+    detector = MotorizedDetector("COM5", calculationPoints=4)
+    # cobotController = CobotController(detector, 20)
 
-    main = Main(cobotController)
+    main = Main(detector)
     main.start()
     main.run()
