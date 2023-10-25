@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using Modbus.Device;
-using System.Net;
+using Microsoft.Extensions.Options;
+using ValkWelding.Welding.Touch_PoC.Configuration;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
 {
@@ -13,10 +14,10 @@ namespace ValkWelding.Welding.Touch_PoC.Services
     {
         private string ipAddress;
         private int port;
-        public CobotConnectionService()
+        public CobotConnectionService(IOptions<LocalConfig> configuration)
         {
-            this.ipAddress = "192.168.0.1";
-            this.port = 5890;
+            this.ipAddress = configuration.Value.CobotSettings.IpAddress;
+            this.port = configuration.Value.CobotSettings.Port;
         }
 
         public void sendCobotMove(float[] point, int speed)
