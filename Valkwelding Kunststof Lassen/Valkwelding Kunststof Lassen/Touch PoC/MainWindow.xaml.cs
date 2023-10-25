@@ -35,20 +35,11 @@ namespace ValkWelding.Welding.Touch_PoC
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            List<CobotPosition> positions = new();
-            for (int i = 0; i >= -4; i--)
-            {
-                positions.Add(new CobotPosition()
-                {
-                    X = i,
-                    Y = i,
-                    Z = i,
-                    Pitch = i,
-                    Roll = i,
-                    Jaw = i,
-                    GeneratePointsBetweenLast = i == -2 ? false : true
-                });
-            }
+            List<CobotPosition> positions = new() 
+            { 
+                new() { X = 600, Y = -400, Z = 250, Yaw = -179, Pitch = 0, Roll = -90},
+                new() { X = 600, Y = 0, Z = 250, Yaw = -179, Pitch = 0, Roll = -90, GeneratePointsBetweenLast = true}
+            };
 
             _detectionService.Detect(positions, 5);
         }

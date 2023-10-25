@@ -13,7 +13,7 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
         public float Z { get; set; }
         public float Roll { get; set; }
         public float Pitch { get; set; }
-        public float Jaw { get; set; }
+        public float Yaw { get; set; }
         public bool GeneratePointsBetweenLast {  get; set; }
     }
 }
