@@ -12,12 +12,10 @@ namespace ValkWelding.Welding.Touch_PoC.Services
     public class PathPlanningService : IPathPlanningService
     {
         private ICobotControllerService _cobotController;
-        private IDistanceDetector _distanceDetector;
 
-        public PathPlanningService(ICobotControllerService cobotController, IDistanceDetector distanceDetector)
+        public PathPlanningService(ICobotControllerService cobotController)
         {
             _cobotController = cobotController;
-            _distanceDetector = distanceDetector;
         }
 
         public void Detect(IEnumerable<CobotPosition> measurePoints, int pointsBetween)
@@ -25,7 +23,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             List<CobotPosition> measurePositions = GeneratePointsBetween(measurePoints, pointsBetween);
             foreach (CobotPosition measurePosition in measurePositions)
             {
-                // Detect edge for each position, then replace X, Y, Z, etc... within the position. 
+                _cobotController.DetectObject(measurePosition);
             }
         }
 

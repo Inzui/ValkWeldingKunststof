@@ -31,37 +31,42 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             Speed = configuration.Value.CobotSettings.MovementSpeed;
         }
 
-        public void moveToSteps(float[] point)
+        public void MoveToSteps(float[] point)
         {
-            float[] currentPos = roundedPoint(_cob.readPos());
-            float[] desPos = roundedPoint(point);
+            float[] currentPos = RoundedPoint(_cob.readPos());
+            float[] desPos = RoundedPoint(point);
 
             this._precisionSize = 0;
 
-            while (!onPosition(currentPos, desPos))
+            while (!OnPosition(currentPos, desPos))
             {
-                _cob.sendCobotMove(getMove(currentPos, desPos), Speed);
+                _cob.sendCobotMove(GetMove(currentPos, desPos), Speed);
                 Thread.Sleep(2000);
-                currentPos = roundedPoint(_cob.readPos());
+                currentPos = RoundedPoint(_cob.readPos());
             }
         }
 
-        public void moveToDirect(float[] point)
+        public void MoveToDirect(CobotPosition destination)
         {
-            float[] currentPos = roundedPoint(_cob.readPos());
-            float[] desPos = roundedPoint(point);
+            CobotPosition currentPos = GetCobotPosition();
+            CobotPosition desPos = destination;
+            desPos.RoundValues();
 
-            _cob.sendCobotPos(desPos, Speed);
+            float[] desPosArray = { destination.X, destination.Y, destination.Z, destination.Roll, destination.Pitch, destination.Yaw };
+
+            _cob.sendCobotPos(desPosArray, Speed);
 
             Trace.WriteLine(_cob.readError());
 
-            while (!onPosition(currentPos, desPos))
+            while (currentPos != desPos)
             {
-                currentPos = roundedPoint(_cob.readPos());
+                currentPos = GetCobotPosition();
+                currentPos.RoundValues();
+                Debug.WriteLine($"Current: {currentPos} \nDest: {desPos}\n===========");
             }
         }
 
-        private float[] getMove(float[] currentPos, float[] desPos)
+        private float[] GetMove(float[] currentPos, float[] desPos)
         {
             float[] newMove = { 0, 0, 0, 0, 0, 0 };
 
@@ -88,7 +93,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             return newMove;
         }
 
-        private float[] roundedPoint(float[] point)
+        private float[] RoundedPoint(float[] point)
         {
             float[] result = new float[point.Length];
 
@@ -100,7 +105,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             return result;
         }
 
-        private bool onPosition(float[] currentPos, float[] desPos)
+        private bool OnPosition(float[] currentPos, float[] desPos)
         {
             for (int i = 0; i < currentPos.Length; i++)
             {
@@ -113,35 +118,57 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             return true;
         }
 
-        public CobotPosition getCobotPosition()
+        public CobotPosition GetCobotPosition()
         {
             float[] currentPos = _cob.readPos();
 
-            CobotPosition cobotPos = new();
-
-            cobotPos.X = currentPos[0];
-            cobotPos.Y = currentPos[1];
-            cobotPos.Z = currentPos[2];
-            cobotPos.Yaw = currentPos[3];
-            cobotPos.Roll = currentPos[4];
-            cobotPos.Pitch = currentPos[5];
+            CobotPosition cobotPos = new()
+            {
+                X = currentPos[0],
+                Y = currentPos[1],
+                Z = currentPos[2],
+                Yaw = -currentPos[3],
+                Roll = currentPos[5],
+                Pitch = currentPos[4]
+            };
 
             return cobotPos;
         }
 
-        public void moveCobotPosition(CobotPosition cobotPos)
-        {
-            float[] desPos = { cobotPos.X, cobotPos.Y, cobotPos.Z, cobotPos.Yaw, cobotPos.Roll, cobotPos.Pitch };
-            moveToSteps(desPos);
-        }
-
-        private void printPoint(float[] point)
+        private void PrintPoint(float[] point)
         {
             foreach (var p in point)
             {
                 Trace.Write($"{p}, ");
             }
             Trace.WriteLine("");
+        }
+
+        public void DetectObject(CobotPosition startingPosition)
+        {
+            MoveToDirect(startingPosition);
+
+            CobotPosition currentPosition = startingPosition;
+            for (int i = 0; i < 5; i++)
+            {
+                currentPosition = GetDetectionPosition(currentPosition);
+                MoveToDirect(currentPosition);
+            }
+        }
+
+        private CobotPosition GetDetectionPosition(CobotPosition startingPosition)
+        {
+            //Place head in right direction
+            float alpha = startingPosition.Yaw;
+
+            float deltaX = StepSize;
+            float deltaY = (float)Math.Atan((double)alpha) * deltaX;
+
+            CobotPosition newPosition = startingPosition;
+            newPosition.X += deltaX; 
+            newPosition.Y += deltaY;
+
+            return newPosition;
         }
     }
 }

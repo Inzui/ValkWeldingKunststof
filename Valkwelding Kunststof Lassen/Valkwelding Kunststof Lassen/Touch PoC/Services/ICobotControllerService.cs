@@ -1,11 +1,15 @@
-﻿namespace ValkWelding.Welding.Touch_PoC.Services
+﻿using ValkWelding.Welding.Touch_PoC.HelperObjects;
+
+namespace ValkWelding.Welding.Touch_PoC.Services
 {
     public interface ICobotControllerService
     {
         int Speed { get; set; }
         float StepSize { get; set; }
 
-        void moveToDirect(float[] point);
-        void moveToSteps(float[] point);
+        CobotPosition GetCobotPosition();
+        void MoveToDirect(CobotPosition destination);
+        void MoveToSteps(float[] point);
+        void DetectObject(CobotPosition startingPosition);
     }
 }
