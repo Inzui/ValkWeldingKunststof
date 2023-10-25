@@ -21,7 +21,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
         public CobotControllerService(ICobotConnectionService cobotConnect)
         {
-            this.StepSize = 5;
+            this.StepSize = 20;
             this._precisionSize = 2;
             this._cob = cobotConnect;
             Speed = 100;
@@ -32,14 +32,13 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             float[] currentPos = roundedPoint(_cob.readPos());
             float[] desPos = roundedPoint(point);
 
+            this._precisionSize = 0;
+
             while (!onPosition(currentPos, desPos))
             {
                 _cob.sendCobotMove(getMove(currentPos, desPos), Speed);
+                Thread.Sleep(2000);
                 currentPos = roundedPoint(_cob.readPos());
-                Thread.Sleep(1000);
-                Trace.WriteLine("--------------------");
-                printPoint(currentPos);
-                printPoint(desPos);
             }
         }
 
@@ -60,13 +59,13 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
         private float[] getMove(float[] currentPos, float[] desPos)
         {
-            float[] newMove = new float[6];
+            float[] newMove = { 0, 0, 0, 0, 0, 0 };
 
-            for (int i = 0; i < newMove.Length; i++)
+            for (int i = 0; i < 2; i++)
             {
                 if (Math.Abs(currentPos[i] - desPos[i]) < StepSize)
                 {
-                    newMove[i] = currentPos[i] - desPos[i];
+                    newMove[i] = (float)Math.Round(currentPos[i] - desPos[i], _precisionSize);
                 }
                 else if (currentPos[i] < desPos[i])
                 {
@@ -81,6 +80,8 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             float temp = newMove[0];
             newMove[0] = newMove[1];
             newMove[1] = temp;
+
+            printPoint(newMove);
 
             return newMove;
         }

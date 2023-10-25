@@ -33,19 +33,11 @@ namespace ValkWelding.Welding.Touch_PoC
         {
             float[] point1 = { 600, -400, 250, -179, 0, -90};
             float[] point2 = { 600, 0, 250, -179, 0, -90 };
-            float[] point3 = { 600, 0, 500, -179, 0, -90 };
-            float[] point4 = { 600, -400, 500, -179, 0, -90 };
 
-            for(int i = 0; i < 3; i++)
-            {
-                _cob.moveToDirect(point1);
-                _cob.moveToDirect(point2);
-                _cob.moveToDirect(point3);
-                _cob.moveToDirect(point4);
-            }
+            _cob.moveToDirect(point1);
+            _cob.moveToDirect(point2);
 
             _cob.moveToSteps(point1);
-            //_cob.moveToSteps(point2);
 
         }
     }
