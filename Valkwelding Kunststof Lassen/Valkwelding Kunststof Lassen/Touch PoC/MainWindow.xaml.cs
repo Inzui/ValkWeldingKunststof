@@ -45,7 +45,7 @@ namespace ValkWelding.Welding.Touch_PoC
                     Z = i,
                     Pitch = i,
                     Roll = i,
-                    Jaw = i,
+                    Yaw = i,
                     GeneratePointsBetweenLast = i == -2 ? false : true
                 });
             }

@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Media.Animation;
 using ValkWelding.Welding.Touch_PoC.Configuration;
+using ValkWelding.Welding.Touch_PoC.HelperObjects;
+using System.Transactions;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
 {
@@ -109,6 +111,28 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             }
 
             return true;
+        }
+
+        public CobotPosition getCobotPosition()
+        {
+            float[] currentPos = _cob.readPos();
+
+            CobotPosition cobotPos = new();
+
+            cobotPos.X = currentPos[0];
+            cobotPos.Y = currentPos[1];
+            cobotPos.Z = currentPos[2];
+            cobotPos.Yaw = currentPos[3];
+            cobotPos.Roll = currentPos[4];
+            cobotPos.Pitch = currentPos[5];
+
+            return cobotPos;
+        }
+
+        public void moveCobotPosition(CobotPosition cobotPos)
+        {
+            float[] desPos = { cobotPos.X, cobotPos.Y, cobotPos.Z, cobotPos.Yaw, cobotPos.Roll, cobotPos.Pitch };
+            moveToSteps(desPos);
         }
 
         private void printPoint(float[] point)

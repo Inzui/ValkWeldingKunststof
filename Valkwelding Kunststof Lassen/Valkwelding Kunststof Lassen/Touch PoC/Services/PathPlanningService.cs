@@ -43,7 +43,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                     float distributionX = (currPos.X - previousPos.X) / pointsBetween;
                     float distributionY = (currPos.Y - previousPos.Y) / pointsBetween;
                     float distributionZ = (currPos.Z - previousPos.Z) / pointsBetween;
-                    float distributionJaw = (currPos.Jaw - previousPos.Jaw) / pointsBetween;
+                    float distributionJaw = (currPos.Yaw - previousPos.Yaw) / pointsBetween;
 
                     for (int j = 0; j < pointsBetween -1; j++)
                     {
@@ -52,7 +52,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                             X = generatedPoints.Last().X + distributionX,
                             Y = generatedPoints.Last().Y + distributionY,
                             Z = generatedPoints.Last().Z + distributionZ,
-                            Jaw = generatedPoints.Last().Jaw + distributionJaw,
+                            Yaw = generatedPoints.Last().Yaw + distributionJaw,
                             Pitch = currPos.Pitch,
                             Roll = currPos.Roll,
                             GeneratePointsBetweenLast = true
