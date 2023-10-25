@@ -34,7 +34,7 @@ namespace ValkWelding.Welding.Touch_PoC
 
             // Add Singleton Services
             services.AddSingleton<MainWindow>();
-            services.AddSingleton<IDistanceDetector, TouchDetector>();
+            services.AddSingleton<IDistanceDetector, DummyDetector>();
             services.AddSingleton<ICobotConnectionService, CobotConnectionService>();
             services.AddSingleton<ICobotControllerService, CobotControllerService>();
 
