@@ -66,6 +66,18 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             return ret;
         }
 
+        public int readError()
+        {
+            using (TcpClient client = new TcpClient(ipAddress, 502))
+            {
+                using (ModbusIpMaster master = ModbusIpMaster.CreateIp(client))
+                {
+                    var output = master.ReadInputRegisters(7332, 1);
+                    return output[0];
+                }
+            }
+        }
+
         private string packetSender(string command)
         {
             string h = chkStr(command);
