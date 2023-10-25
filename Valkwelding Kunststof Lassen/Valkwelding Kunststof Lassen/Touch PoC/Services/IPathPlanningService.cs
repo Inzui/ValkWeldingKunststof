@@ -3,7 +3,7 @@ using ValkWelding.Welding.Touch_PoC.HelperObjects;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
 {
-    public interface IDetectionService
+    public interface IPathPlanningService
     {
         void Detect(IEnumerable<CobotPosition> measurePoints, int pointsBetween);
     }

@@ -39,7 +39,7 @@ namespace ValkWelding.Welding.Touch_PoC
             services.AddSingleton<ICobotControllerService, CobotControllerService>();
 
             // Add Scoped Services
-            services.AddScoped<IDetectionService, DetectionService>();
+            services.AddScoped<IPathPlanningService, PathPlanningService>();
         }
 
         private void OnStartup(object sender, StartupEventArgs e)

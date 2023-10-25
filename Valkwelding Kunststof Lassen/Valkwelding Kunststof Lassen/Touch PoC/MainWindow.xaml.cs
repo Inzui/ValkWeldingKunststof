@@ -24,9 +24,9 @@ namespace ValkWelding.Welding.Touch_PoC
     public partial class MainWindow : Window
     {
         private IDistanceDetector _distanceDetector;
-        private IDetectionService _detectionService;
+        private IPathPlanningService _detectionService;
 
-        public MainWindow(IDistanceDetector detector, IDetectionService detectionService)
+        public MainWindow(IDistanceDetector detector, IPathPlanningService detectionService)
         {
             _distanceDetector = detector;
             _detectionService = detectionService;
@@ -50,7 +50,7 @@ namespace ValkWelding.Welding.Touch_PoC
                 });
             }
 
-            _detectionService.Detect(positions, 10);
+            _detectionService.Detect(positions, 5);
         }
 
         private void Detection_Trigger_Down(object sender, RoutedEventArgs e)
