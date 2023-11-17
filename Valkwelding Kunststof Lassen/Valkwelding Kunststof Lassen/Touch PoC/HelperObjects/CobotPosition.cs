@@ -19,7 +19,7 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
 
         public override string ToString() 
         {
-            return $"X: {X}, Y: {Y}, Z: {Z}, Pitch: {Pitch}, Roll: {Roll}, Yaw: {Yaw}";
+            return $"X: {X}, Y: {Y}, Z: {Z}, Roll: {Roll}, Pitch: {Pitch}, Yaw: {Yaw}";
         }
 
         public static bool operator ==(CobotPosition c1, CobotPosition c2)
@@ -47,9 +47,14 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
             X = (float)Math.Round(X, digits);
             Y = (float)Math.Round(Y, digits);
             Z = (float)Math.Round(Z, digits);
-            Pitch = (float)Math.Round(Pitch, digits);
-            Roll = (float)Math.Round(Roll, digits);
-            Yaw = (float)Math.Round(Yaw, digits);
+            Roll = ((float)Math.Round(Roll, digits)) % 360;
+            Pitch = ((float)Math.Round(Pitch, digits)) % 360;
+            Yaw = ((float)Math.Round(Yaw, digits)) % 360;
+        }
+
+        public CobotPosition Copy()
+        {
+            return (CobotPosition)this.MemberwiseClone();
         }
     }
 }

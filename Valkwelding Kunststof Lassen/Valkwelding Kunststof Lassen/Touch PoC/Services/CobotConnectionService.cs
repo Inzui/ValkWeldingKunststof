@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using Modbus.Device;
 using Microsoft.Extensions.Options;
 using ValkWelding.Welding.Touch_PoC.Configuration;
+using System.Globalization;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
 {
@@ -130,7 +131,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
         private string toText(float[] point)
         {
-            return $"{point[0]}, {point[1]}, {point[2]}, {point[3]}, {point[4]}, {point[5]}";
+            return $"{point[0].ToString(CultureInfo.InvariantCulture)}, {point[1].ToString(CultureInfo.InvariantCulture)}, {point[2].ToString(CultureInfo.InvariantCulture)}, {point[3].ToString(CultureInfo.InvariantCulture)}, {point[4].ToString(CultureInfo.InvariantCulture)}, {point[5].ToString(CultureInfo.InvariantCulture)}";
         }
     }
 }

@@ -49,20 +49,18 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         public void MoveToDirect(CobotPosition destination)
         {
             CobotPosition currentPos = GetCobotPosition();
-            CobotPosition desPos = destination;
-            desPos.RoundValues();
+            destination.RoundValues();
+            currentPos.RoundValues();
 
             float[] desPosArray = { destination.X, destination.Y, destination.Z, destination.Roll, destination.Pitch, destination.Yaw };
 
             _cob.sendCobotPos(desPosArray, Speed);
 
-            Trace.WriteLine(_cob.readError());
-
-            while (currentPos != desPos)
+            while (currentPos != destination)
             {
                 currentPos = GetCobotPosition();
                 currentPos.RoundValues();
-                Debug.WriteLine($"Current: {currentPos} \nDest: {desPos}\n===========");
+                //Debug.WriteLine($"Current: {currentPos} \nDest: {desPos}\n===========");
             }
         }
 
@@ -127,9 +125,9 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                 X = currentPos[0],
                 Y = currentPos[1],
                 Z = currentPos[2],
-                Yaw = -currentPos[3],
-                Roll = currentPos[5],
-                Pitch = currentPos[4]
+                Roll = currentPos[3] + 180,
+                Pitch = (-currentPos[4]) + 180,
+                Yaw = currentPos[5] + 180
             };
 
             return cobotPos;
@@ -139,9 +137,9 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         {
             foreach (var p in point)
             {
-                Trace.Write($"{p}, ");
+                Debug.Write($"{p}, ");
             }
-            Trace.WriteLine("");
+            Debug.WriteLine("");
         }
 
         public void DetectObject(CobotPosition startingPosition)
@@ -159,12 +157,15 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         private CobotPosition GetDetectionPosition(CobotPosition startingPosition)
         {
             //Place head in right direction
-            float alpha = startingPosition.Yaw;
+            float alpha = (float)((-startingPosition.Yaw + 90) * Math.PI / 180.0);
 
-            float deltaX = StepSize;
-            float deltaY = (float)Math.Atan((double)alpha) * deltaX;
+            float deltaX = (float)Math.Cos(alpha) * StepSize;
+            float deltaY = (float)Math.Sin(alpha) * -StepSize;
 
-            CobotPosition newPosition = startingPosition;
+            Debug.WriteLine($"alpha: {alpha} -> {deltaX}, {deltaY}");
+
+
+            CobotPosition newPosition = startingPosition.Copy();
             newPosition.X += deltaX; 
             newPosition.Y += deltaY;
 

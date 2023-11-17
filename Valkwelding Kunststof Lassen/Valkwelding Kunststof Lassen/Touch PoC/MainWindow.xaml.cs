@@ -37,11 +37,13 @@ namespace ValkWelding.Welding.Touch_PoC
         {
             List<CobotPosition> positions = new() 
             { 
-                new() { X = 600, Y = -400, Z = 250, Yaw = 0, Pitch = 90, Roll = 0},
-                new() { X = 600, Y = -400, Z = 250, Yaw = -45, Pitch = 90, Roll = 0, GeneratePointsBetweenLast = false}
+                new() { X = 300, Y = -300, Z = 250, Roll = 0, Pitch = 180, Yaw = 0},
+                new() { X = 350, Y = -300, Z = 250, Roll = 0, Pitch = 180, Yaw = 45, GeneratePointsBetweenLast = false},
+                new() { X = 400, Y = -300, Z = 250, Roll = 0, Pitch = 180, Yaw = 90, GeneratePointsBetweenLast = false},
+                new() { X = 450, Y = -300, Z = 250, Roll = 0, Pitch = 180, Yaw = 135, GeneratePointsBetweenLast = false}
             };
 
-            _detectionService.Detect(positions, 5);
+            _detectionService.Detect(positions, 1);
         }
 
         private void Detection_Trigger_Down(object sender, RoutedEventArgs e)
