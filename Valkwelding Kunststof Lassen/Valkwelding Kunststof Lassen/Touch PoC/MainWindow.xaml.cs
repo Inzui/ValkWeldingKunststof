@@ -23,35 +23,9 @@ namespace ValkWelding.Welding.Touch_PoC
     /// </summary>
     public partial class MainWindow : Window
     {
-        private IDistanceDetector _distanceDetector;
-        private IPathPlanningService _detectionService;
-
-        public MainWindow(IDistanceDetector detector, IPathPlanningService detectionService)
+        public MainWindow()
         {
-            _distanceDetector = detector;
-            _detectionService = detectionService;
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            List<CobotPosition> positions = new() 
-            { 
-                new() { X = 600, Y = -400, Z = 250, Yaw = 0, Pitch = 90, Roll = 0},
-                new() { X = 600, Y = -400, Z = 250, Yaw = -45, Pitch = 90, Roll = 0, GeneratePointsBetweenLast = false}
-            };
-
-            _detectionService.Detect(positions, 5);
-        }
-
-        private void Detection_Trigger_Down(object sender, RoutedEventArgs e)
-        {
-            _distanceDetector.ObjectDetected = true;
-        }
-
-        private void Detection_Trigger_Up(object sender, RoutedEventArgs e)
-        {
-            _distanceDetector.ObjectDetected = false;
         }
     }
 }

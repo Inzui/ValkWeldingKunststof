@@ -4,16 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ValkWelding.Welding.Touch_PoC"
+        xmlns:uc="clr-namespace:ValkWelding.Welding.Touch_PoC.UserControls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <StackPanel>
-        <Button Margin="10"
-                Content="Run"
-                Click="Button_Click"/>
-        <Button Margin="10"
-                Content="Trigger Detection"
-                PreviewMouseDown="Detection_Trigger_Down" 
-                PreviewMouseUp="Detection_Trigger_Up"
-                Height="120"/>
-    </StackPanel>
+    <Grid Background="#FF313131">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Border BorderBrush="Gray"
+                BorderThickness="1"
+                Grid.Column="1"
+                Margin="5">
+            <uc:SettingsControl/>
+        </Border>
+    </Grid>
 </Window>

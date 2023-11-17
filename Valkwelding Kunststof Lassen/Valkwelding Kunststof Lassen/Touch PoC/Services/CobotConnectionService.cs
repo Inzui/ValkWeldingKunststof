@@ -7,17 +7,31 @@ using System.Net.Sockets;
 using Modbus.Device;
 using Microsoft.Extensions.Options;
 using ValkWelding.Welding.Touch_PoC.Configuration;
+using System.Net;
+using System.Diagnostics;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
 {
     public class CobotConnectionService : ICobotConnectionService
     {
-        private string ipAddress;
-        private int port;
+        private string _ipAddress;
+        private int _port;
+
         public CobotConnectionService(IOptions<LocalConfig> configuration)
         {
-            this.ipAddress = configuration.Value.CobotSettings.IpAddress;
-            this.port = configuration.Value.CobotSettings.Port;
+            _port = configuration.Value.CobotSettings.Port;
+        }
+
+        public void Connect(string ipAddress)
+        {
+            if (IPAddress.TryParse(ipAddress, out _))
+            {
+                _ipAddress = ipAddress;
+            }
+            else
+            {
+                Debug.WriteLine("INVALID IP");
+            }
         }
 
         public void sendCobotMove(float[] point, int speed)
@@ -28,7 +42,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             {
                 byte[] byteCommand = Encoding.UTF8.GetBytes(packetSender(command));
 
-                socket.Connect(ipAddress, port);
+                socket.Connect(_ipAddress, _port);
                 socket.Send(byteCommand);
             }
         }
@@ -41,7 +55,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             {
                 byte[] byteCommand = Encoding.UTF8.GetBytes(packetSender(command));
 
-                socket.Connect(ipAddress, port);
+                socket.Connect(_ipAddress, _port);
                 socket.Send(byteCommand);
             }
         }
@@ -50,7 +64,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         {
             float[] ret = new float[6];
 
-            using (TcpClient client = new TcpClient(ipAddress, 502))
+            using (TcpClient client = new TcpClient(_ipAddress, 502))
             {
                 using (ModbusIpMaster master = ModbusIpMaster.CreateIp(client))
                 {
@@ -68,7 +82,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
         public int readError()
         {
-            using (TcpClient client = new TcpClient(ipAddress, 502))
+            using (TcpClient client = new TcpClient(_ipAddress, 502))
             {
                 using (ModbusIpMaster master = ModbusIpMaster.CreateIp(client))
                 {
