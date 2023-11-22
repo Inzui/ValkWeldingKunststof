@@ -22,24 +22,59 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
             return $"X: {X}, Y: {Y}, Z: {Z}, Pitch: {Pitch}, Roll: {Roll}, Yaw: {Yaw}";
         }
 
-        public static bool operator ==(CobotPosition c1, CobotPosition c2)
+        public static bool operator ==(CobotPosition a, CobotPosition b)
         {
-            return c1.X == c2.X &&
-                c1.Y == c2.Y &&
-                c1.Z == c2.Z &&
-                c1.Pitch == c2.Pitch &&
-                c1.Roll == c2.Roll &&
-                c1.Yaw == c2.Yaw;
+            if (a is null)
+            {
+                if (b is null)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return a.Equals(b);
         }
 
-        public static bool operator !=(CobotPosition c1, CobotPosition c2)
+        public static bool operator !=(CobotPosition a, CobotPosition b)
         {
-            return c1.X != c2.X ||
-                c1.Y != c2.Y ||
-                c1.Z != c2.Z ||
-                c1.Pitch != c2.Pitch ||
-                c1.Roll != c2.Roll ||
-                c1.Yaw != c2.Yaw;
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            CobotPosition p = obj as CobotPosition;
+            if (p is null)
+            {
+                return false;
+            }
+
+            return (X == p.X) 
+                && (Y == p.Y) 
+                && (Z == p.Z) 
+                && (Pitch == p.Pitch) 
+                && (Roll == p.Roll) 
+                && (Yaw == p.Yaw) 
+                && (GeneratePointsBetweenLast == p.GeneratePointsBetweenLast);
+        }
+
+        public bool Equals(CobotPosition p)
+        {
+            if (p is null)
+            {
+                return false;
+            }
+            return (X == p.X) 
+                && (Y == p.Y) 
+                && (Z == p.Z) 
+                && (Pitch == p.Pitch) 
+                && (Roll == p.Roll) 
+                && (Yaw == p.Yaw) 
+                && (GeneratePointsBetweenLast == p.GeneratePointsBetweenLast);
         }
 
         public void RoundValues(int digits = 1)
@@ -50,6 +85,11 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
             Pitch = (float)Math.Round(Pitch, digits);
             Roll = (float)Math.Round(Roll, digits);
             Yaw = (float)Math.Round(Yaw, digits);
+        }
+
+        public CobotPosition Copy()
+        {
+            return (CobotPosition)this.MemberwiseClone();
         }
     }
 }

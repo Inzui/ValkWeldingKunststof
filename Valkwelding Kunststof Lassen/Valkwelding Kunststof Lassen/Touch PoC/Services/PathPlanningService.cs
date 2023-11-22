@@ -28,7 +28,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
             _getPositionTimer = new();
             _getPositionTimer.Elapsed += new ElapsedEventHandler(GetCurrentCobotPositionEvent);
-            _getPositionTimer.Interval = 1000;
+            _getPositionTimer.Interval = 500;
             _busy = false;
         }
 
