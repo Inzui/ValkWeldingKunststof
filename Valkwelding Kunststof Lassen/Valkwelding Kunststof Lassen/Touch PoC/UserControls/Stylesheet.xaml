@@ -7,9 +7,15 @@
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
+    
     <Style x:Key="SubText" TargetType="TextBlock">
         <Setter Property="Foreground" Value="LightGray"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+    
+    <Style x:Key="PositionText" TargetType="TextBlock">
+        <Setter Property="Margin" Value="10,0"/>
+        <Setter Property="Foreground" Value="LightGray"/>
     </Style>
 
     <!--TextBox-->

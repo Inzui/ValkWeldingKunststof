@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using ValkWelding.Welding.Touch_PoC.Configuration;
+using ValkWelding.Welding.Touch_PoC.HelperObjects;
 using ValkWelding.Welding.Touch_PoC.Services;
 
 namespace ValkWelding.Welding.Touch_PoC.ViewModels
@@ -9,16 +10,24 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
     public class SettingsViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
         public ICobotConnectionService CobotConnectionService { get; private set; }
-        private string _currentVec;
+
+        private CobotPosition _currentCobotPosition;
+        private string _messageBox;
         private string _cobotIpAddress;
+        private bool _connectButtonEnabled;
 
         public SettingsViewModel(IOptions<LocalConfig> configuration, ICobotConnectionService cobotConnectionService)
         {
             CobotConnectionService = cobotConnectionService;
             CobotIpAddress = configuration.Value.CobotSettings.IpAddress;
-            _currentVec = "VECTOR";
+
+            _currentCobotPosition = new()
+            {
+                X = 0, Y = 0, Z = 0, Pitch = 0, Roll = 0, Yaw = 0
+            };
+            _messageBox = "Cobot disconnected";
+            _connectButtonEnabled = true;
         }
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -26,17 +35,33 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        public string CurrentCobotVector
+        public CobotPosition CurrentCobotPosition
         {
             get
             {
-                return _currentVec;
+                return _currentCobotPosition;
             }
             set
             {
-                if (value != _currentVec)
+                if (value != _currentCobotPosition)
                 {
-                    _currentVec = value;
+                    _currentCobotPosition = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string MessageBoxText
+        {
+            get
+            {
+                return _messageBox;
+            }
+            set
+            {
+                if (value != _messageBox)
+                {
+                    _messageBox = value;
                     OnPropertyChanged();
                 }
             }
@@ -53,6 +78,22 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
                 if (value != _cobotIpAddress)
                 {
                     _cobotIpAddress = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        
+        public bool ConnectButtonEnabled
+        {
+            get
+            {
+                return _connectButtonEnabled;
+            }
+            set
+            {
+                if (value != _connectButtonEnabled)
+                {
+                    _connectButtonEnabled = value;
                     OnPropertyChanged();
                 }
             }

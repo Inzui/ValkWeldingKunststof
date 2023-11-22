@@ -50,6 +50,7 @@ namespace ValkWelding.Welding.Touch_PoC
         {
             // Call startup functions from services that require it
             _serviceProvider.GetService<IDistanceDetector>().Start();
+            _serviceProvider.GetService<IPathPlanningService>().Start();
 
             var mainWindow = _serviceProvider.GetService<MainWindow>();
             mainWindow.Show();

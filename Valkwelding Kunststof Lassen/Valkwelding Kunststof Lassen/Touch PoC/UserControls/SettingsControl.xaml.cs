@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,9 +32,24 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
             InitializeComponent();
         }
 
-        private void Connect_Button_Click(object sender, RoutedEventArgs e)
+        private async void Connect_Button_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.CobotConnectionService.Connect(ViewModel.CobotIpAddress);
+            try
+            {
+                ViewModel.MessageBoxText = "Connecting...";
+                ViewModel.ConnectButtonEnabled = false;
+                await ViewModel.CobotConnectionService.CheckConnection(ViewModel.CobotIpAddress);
+                ViewModel.MessageBoxText = "Connected";
+            }
+            catch (Exception ex)
+            {
+                ViewModel.MessageBoxText = ex.Message;
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                ViewModel.ConnectButtonEnabled = true;
+            }
         }
     }
 }

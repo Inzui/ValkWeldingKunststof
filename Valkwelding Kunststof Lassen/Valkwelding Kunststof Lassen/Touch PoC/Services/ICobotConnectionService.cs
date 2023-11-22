@@ -1,8 +1,12 @@
-﻿namespace ValkWelding.Welding.Touch_PoC.Services
+﻿using System.Threading.Tasks;
+
+namespace ValkWelding.Welding.Touch_PoC.Services
 {
     public interface ICobotConnectionService
     {
-        void Connect(string ipAddress);
+        bool CobotConnected { get; set; }
+
+        Task CheckConnection(string ipAddress);
         int readError();
         float[] readPos();
         void sendCobotMove(float[] point, int speed);

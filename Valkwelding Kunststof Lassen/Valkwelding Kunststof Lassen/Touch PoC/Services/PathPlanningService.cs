@@ -4,18 +4,59 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using ValkWelding.Welding.Touch_PoC.DistanceDetectors;
 using ValkWelding.Welding.Touch_PoC.HelperObjects;
+using ValkWelding.Welding.Touch_PoC.ViewModels;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
 {
     public class PathPlanningService : IPathPlanningService
     {
+        private ICobotConnectionService _cobotConnectionService;
         private ICobotControllerService _cobotController;
+        private SettingsViewModel _settingsViewModel;
 
-        public PathPlanningService(ICobotControllerService cobotController)
+        private Timer _getPositionTimer;
+        private bool _busy;
+
+        public PathPlanningService(ICobotConnectionService connectionService, ICobotControllerService cobotController, SettingsViewModel settingsViewModel)
         {
+            _cobotConnectionService = connectionService;
             _cobotController = cobotController;
+            _settingsViewModel = settingsViewModel;
+
+            _getPositionTimer = new();
+            _getPositionTimer.Elapsed += new ElapsedEventHandler(GetCurrentCobotPositionEvent);
+            _getPositionTimer.Interval = 1000;
+            _busy = false;
+        }
+
+        public void Start()
+        {
+            _getPositionTimer.Enabled = true;
+        }
+
+        private void GetCurrentCobotPositionEvent(object source, ElapsedEventArgs e)
+        {
+            if (!_busy)
+            {
+                _busy = true;
+                if (_cobotConnectionService.CobotConnected)
+                {
+                    try
+                    {
+                        _settingsViewModel.CurrentCobotPosition = _cobotController.GetCobotPosition();
+                    }
+                    catch (Exception ex)
+                    {
+                        _cobotConnectionService.CobotConnected = false;
+                        _settingsViewModel.MessageBoxText = "Connection Error";
+                        Debug.WriteLine(ex);
+                    }
+                }
+                _busy = false;
+            }
         }
 
         public void Detect(IEnumerable<CobotPosition> measurePoints, int pointsBetween)

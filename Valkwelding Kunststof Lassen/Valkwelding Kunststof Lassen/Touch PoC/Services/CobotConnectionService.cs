@@ -14,23 +14,38 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 {
     public class CobotConnectionService : ICobotConnectionService
     {
+        public bool CobotConnected { get; set; }
+
         private string _ipAddress;
         private int _port;
 
         public CobotConnectionService(IOptions<LocalConfig> configuration)
         {
+            CobotConnected = false;
             _port = configuration.Value.CobotSettings.Port;
         }
 
-        public void Connect(string ipAddress)
+        public async Task CheckConnection(string ipAddress)
         {
             if (IPAddress.TryParse(ipAddress, out _))
             {
                 _ipAddress = ipAddress;
+                try
+                {
+                    await Task.Run(readPos);
+                    CobotConnected = true;
+                }
+                catch (Exception ex)
+                {
+                    CobotConnected = false;
+                    Debug.WriteLine(ex);
+                    throw new Exception("Connection Error");
+                }
             }
             else
             {
-                Debug.WriteLine("INVALID IP");
+                CobotConnected = false;
+                throw new Exception("Invalid IP-Address");
             }
         }
 
@@ -64,7 +79,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         {
             float[] ret = new float[6];
 
-            using (TcpClient client = new TcpClient(_ipAddress, 502))
+            using (TcpClient client = new(_ipAddress, 502))
             {
                 using (ModbusIpMaster master = ModbusIpMaster.CreateIp(client))
                 {

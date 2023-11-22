@@ -19,14 +19,76 @@
 
         <StackPanel>
             <TextBlock Style="{StaticResource HeaderText}"
-            Text="Current Position"
-           Margin="5"/>
+                       Text="Current Position"
+                       Margin="5"/>
             <Border BorderBrush="Gray"
                     BorderThickness="1"
                     Margin="75, 0">
                 <TextBlock Style="{StaticResource SubText}"
-                           Text="{Binding CurrentCobotVector}"/>
+                           Text="{Binding MessageBoxText}"/>
             </Border>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Style="{StaticResource PositionText}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="X: {0}">
+                            <Binding Path="CurrentCobotPosition.X"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock Grid.Row="1"
+                           Style="{StaticResource PositionText}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="Y: {0}">
+                            <Binding Path="CurrentCobotPosition.Y"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock Grid.Row="2"
+                           Style="{StaticResource PositionText}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="Z: {0}">
+                            <Binding Path="CurrentCobotPosition.Z"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock Grid.Row="0"
+                           Grid.Column="1"
+                           Style="{StaticResource PositionText}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="Pitch: {0}">
+                            <Binding Path="CurrentCobotPosition.Pitch"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Style="{StaticResource PositionText}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="Roll: {0}">
+                            <Binding Path="CurrentCobotPosition.Roll"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock Grid.Row="2"
+                           Grid.Column="1"
+                           Style="{StaticResource PositionText}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="Yaw: {0}">
+                            <Binding Path="CurrentCobotPosition.Yaw"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </Grid>
         </StackPanel>
         <Border Grid.Row="1"
                 BorderBrush="Gray"
@@ -46,7 +108,8 @@
                              Text="{Binding CobotIpAddress, Mode=TwoWay}"/>
                     <Button Style="{StaticResource ConnectButton}"
                             Content="Connect"
-                            Click="Connect_Button_Click"/>
+                            Click="Connect_Button_Click"
+                            IsEnabled="{Binding ConnectButtonEnabled}"/>
                 </StackPanel>
             </Grid>
             </Border>
