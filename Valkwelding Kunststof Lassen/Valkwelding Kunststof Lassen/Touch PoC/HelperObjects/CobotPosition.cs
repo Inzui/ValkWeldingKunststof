@@ -1,25 +1,178 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ValkWelding.Welding.Touch_PoC.HelperObjects
 {
-    public class CobotPosition
+    public class CobotPosition : INotifyPropertyChanged
     {
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Z { get; set; }
-        public float Pitch { get; set; }
-        public float Roll { get; set; }
-        public float Yaw { get; set; }
-        public bool GeneratePointsBetweenLast {  get; set; }
+        private int _id;
+        private float _x;
+        private float _y;
+        private float _z;
+        private float _pitch;
+        private float _roll;
+        private float _yaw;
+        private bool _generatePointsBetweenLast;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public int Id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (value != _id)
+                {
+                    _id = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public float X
+        {
+            get
+            {
+                return _x;
+            }
+            set
+            {
+                if (value != _x)
+                {
+                    _x = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public float Y
+        {
+            get
+            {
+                return _y;
+            }
+            set
+            {
+                if (value != _y)
+                {
+                    _y = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public float Z
+        {
+            get
+            {
+                return _z;
+            }
+            set
+            {
+                if (value != _z)
+                {
+                    _z = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public float Pitch
+        {
+            get
+            {
+                return _pitch;
+            }
+            set
+            {
+                if (value != _pitch)
+                {
+                    _pitch = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public float Roll
+        {
+            get
+            {
+                return _roll;
+            }
+            set
+            {
+                if (value != _roll)
+                {
+                    _roll = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public float Yaw
+        {
+            get
+            {
+                return _yaw;
+            }
+            set
+            {
+                if (value != _yaw)
+                {
+                    _yaw = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool GeneratePointsBetweenLast
+        {
+            get
+            {
+                return _generatePointsBetweenLast;
+            }
+            set
+            {
+                if (value != _generatePointsBetweenLast)
+                {
+                    _generatePointsBetweenLast = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool EqualPosition(CobotPosition otherPos)
+        {
+            if (otherPos is null)
+            {
+                return false;
+            }
+            return (_x == otherPos._x)
+                && (_y == otherPos._y)
+                && (_z == otherPos._z)
+                && (_pitch == otherPos._pitch)
+                && (_roll == otherPos._roll)
+                && (_yaw == otherPos._yaw);
+        }
 
         public override string ToString() 
         {
-            return $"X: {X}, Y: {Y}, Z: {Z}, Roll: {Roll}, Pitch: {Pitch}, Yaw: {Yaw}";
+            return $"ID: {Id}, X: {_x}, Y: {_y}, Z: {_z}, Roll: {_roll}, Pitch: {_pitch}, Yaw: {_yaw}";
         }
 
         public static bool operator ==(CobotPosition a, CobotPosition b)
@@ -53,13 +206,14 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
                 return false;
             }
 
-            return (X == p.X) 
-                && (Y == p.Y) 
-                && (Z == p.Z) 
-                && (Pitch == p.Pitch) 
-                && (Roll == p.Roll) 
-                && (Yaw == p.Yaw) 
-                && (GeneratePointsBetweenLast == p.GeneratePointsBetweenLast);
+            return (Id == p.Id)
+                && (_x == p._x) 
+                && (_y == p._y) 
+                && (_z == p._z) 
+                && (_pitch == p._pitch) 
+                && (_roll == p._roll) 
+                && (_yaw == p._yaw) 
+                && (_generatePointsBetweenLast == p._generatePointsBetweenLast);
         }
 
         public bool Equals(CobotPosition p)
@@ -68,28 +222,35 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
             {
                 return false;
             }
-            return (X == p.X) 
-                && (Y == p.Y) 
-                && (Z == p.Z) 
-                && (Pitch == p.Pitch) 
-                && (Roll == p.Roll) 
-                && (Yaw == p.Yaw) 
-                && (GeneratePointsBetweenLast == p.GeneratePointsBetweenLast);
+            return (Id == p.Id)
+                && (_x == p._x) 
+                && (_y == p._y) 
+                && (_z == p._z) 
+                && (_pitch == p._pitch) 
+                && (_roll == p._roll) 
+                && (_yaw == p._yaw) 
+                && (_generatePointsBetweenLast == p._generatePointsBetweenLast);
         }
 
         public void RoundValues(int digits = 1)
         {
-            X = (float)Math.Round(X, digits);
-            Y = (float)Math.Round(Y, digits);
-            Z = (float)Math.Round(Z, digits);
-            Roll = ((float)Math.Round(Roll, digits)) % 360;
-            Pitch = ((float)Math.Round(Pitch, digits)) % 360;
-            Yaw = ((float)Math.Round(Yaw, digits)) % 360;
+            _x = (float)Math.Round(_x, digits);
+            _y = (float)Math.Round(_y, digits);
+            _z = (float)Math.Round(_z, digits);
+            _roll = ((float)Math.Round(_roll, digits)) % 360;
+            _pitch = ((float)Math.Round(_pitch, digits)) % 360;
+            _yaw = ((float)Math.Round(_yaw, digits)) % 360;
         }
 
         public CobotPosition Copy()
         {
             return (CobotPosition)this.MemberwiseClone();
         }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, _x, _y, _z, _pitch, _roll, _yaw, _generatePointsBetweenLast);
+        }
+
     }
 }

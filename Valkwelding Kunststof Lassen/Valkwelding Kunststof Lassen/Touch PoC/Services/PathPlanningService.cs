@@ -59,16 +59,16 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             }
         }
 
-        public void Detect(IEnumerable<CobotPosition> measurePoints, int pointsBetween)
+        public void Detect(IEnumerable<CobotPosition> measurePoints, int amountOfPoints)
         {
-            List<CobotPosition> measurePositions = GeneratePointsBetween(measurePoints, pointsBetween);
+            List<CobotPosition> measurePositions = GeneratePointsBetween(measurePoints, amountOfPoints);
             foreach (CobotPosition measurePosition in measurePositions)
             {
                 _cobotController.DetectObject(measurePosition);
             }
         }
 
-        private List<CobotPosition> GeneratePointsBetween(IEnumerable<CobotPosition> measurePoints, int pointsBetween)
+        private List<CobotPosition> GeneratePointsBetween(IEnumerable<CobotPosition> measurePoints, int amountOfPoints)
         {
             List<CobotPosition> generatedPoints = new() { measurePoints.First() };
 
@@ -79,12 +79,12 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
                 if (currPos.GeneratePointsBetweenLast)
                 {
-                    float distributionX = (currPos.X - previousPos.X) / pointsBetween;
-                    float distributionY = (currPos.Y - previousPos.Y) / pointsBetween;
-                    float distributionZ = (currPos.Z - previousPos.Z) / pointsBetween;
-                    float distributionJaw = (currPos.Yaw - previousPos.Yaw) / pointsBetween;
+                    float distributionX = (currPos.X - previousPos.X) / amountOfPoints;
+                    float distributionY = (currPos.Y - previousPos.Y) / amountOfPoints;
+                    float distributionZ = (currPos.Z - previousPos.Z) / amountOfPoints;
+                    float distributionJaw = (currPos.Yaw - previousPos.Yaw) / amountOfPoints;
 
-                    for (int j = 0; j < pointsBetween -1; j++)
+                    for (int j = 0; j < amountOfPoints -1; j++)
                     {
                         generatedPoints.Add(new CobotPosition()
                         {

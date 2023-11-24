@@ -56,7 +56,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
             _cob.sendCobotPos(desPosArray, Speed);
 
-            while (currentPos != destination)
+            while (!currentPos.EqualPosition(destination))
             {
                 currentPos = GetCobotPosition();
                 currentPos.RoundValues();

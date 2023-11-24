@@ -17,6 +17,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
     public class CobotConnectionService : ICobotConnectionService
     {
         public bool CobotConnected { get; set; }
+        public bool CobotInRunMode { get { return ReadError() == 6; } }
 
         private string _ipAddress;
         private int _port;
@@ -119,16 +120,20 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             //}
         }
 
-        public int readError()
+        public int ReadError()
         {
-            using (TcpClient client = new TcpClient(_ipAddress, 502))
+            if (!string.IsNullOrEmpty(_ipAddress))
             {
-                using (ModbusIpMaster master = ModbusIpMaster.CreateIp(client))
+                using (TcpClient client = new TcpClient(_ipAddress, 502))
                 {
-                    var output = master.ReadInputRegisters(7332, 1);
-                    return output[0];
+                    using (ModbusIpMaster master = ModbusIpMaster.CreateIp(client))
+                    {
+                        var output = master.ReadInputRegisters(7332, 1);
+                        return output[0];
+                    }
                 }
             }
+            return 0;
         }
 
         private string packetSender(string command)

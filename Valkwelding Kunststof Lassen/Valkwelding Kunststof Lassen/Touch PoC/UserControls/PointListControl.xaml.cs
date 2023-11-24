@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ValkWelding.Welding.Touch_PoC.HelperObjects;
+using ValkWelding.Welding.Touch_PoC.Services;
 using ValkWelding.Welding.Touch_PoC.ViewModels;
 
 namespace ValkWelding.Welding.Touch_PoC.UserControls
@@ -24,22 +26,45 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
         public PointListViewModel ViewModel { get => (PointListViewModel)DataContext; }
 
         private readonly SettingsViewModel _settingsViewModel;
+        private readonly IPathPlanningService _pathPlanningService;
+        private readonly ICobotConnectionService _cobotConnectionService;
 
         public PointListControl()
         {
             DataContext = App.GetService<PointListViewModel>();
             _settingsViewModel = App.GetService<SettingsViewModel>();
+            _pathPlanningService = App.GetService<IPathPlanningService>();
+            _cobotConnectionService = App.GetService<ICobotConnectionService>();
+
             InitializeComponent();
         }
 
         private void Add_Button_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.CobotPositions.Add(_settingsViewModel.CurrentCobotPosition.Copy());
+            CobotPosition selectedPos = _settingsViewModel.CurrentCobotPosition.Copy();
+            selectedPos.Id = ViewModel.CobotPositions.Count;
+            ViewModel.CobotPositions.Add(selectedPos);
         }
 
         private void Remove_Button_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.RemovPositionFromList(ViewModel.SelectedPosition);
+            ViewModel.RemovePositionFromList(ViewModel.SelectedPosition);
+        } 
+        
+        private void Start_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.CobotPositions.Count >= 2)
+            {
+                if (_cobotConnectionService.CobotInRunMode && _cobotConnectionService.CobotConnected)
+                {
+                    ViewModel.AddButtonEnabled = false;
+                    _pathPlanningService.Detect(ViewModel.CobotPositions, 3);
+                }
+                else
+                {
+                    _settingsViewModel.MessageBoxText = "Cobot not connected or not in Run Mode";
+                }
+            }
         }
     }
 }
