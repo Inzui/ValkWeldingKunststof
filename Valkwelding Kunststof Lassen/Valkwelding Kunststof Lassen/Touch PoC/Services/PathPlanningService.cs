@@ -15,15 +15,17 @@ namespace ValkWelding.Welding.Touch_PoC.Services
     {
         private ICobotConnectionService _cobotConnectionService;
         private ICobotControllerService _cobotController;
+        private IDistanceDetector _distanceDetector;
         private SettingsViewModel _settingsViewModel;
 
         private Timer _getPositionTimer;
         private bool _busy;
 
-        public PathPlanningService(ICobotConnectionService connectionService, ICobotControllerService cobotController, SettingsViewModel settingsViewModel)
+        public PathPlanningService(ICobotConnectionService connectionService, ICobotControllerService cobotController, IDistanceDetector distanceDetector,SettingsViewModel settingsViewModel)
         {
             _cobotConnectionService = connectionService;
             _cobotController = cobotController;
+            _distanceDetector = distanceDetector;
             _settingsViewModel = settingsViewModel;
 
             _getPositionTimer = new();
@@ -64,7 +66,22 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             List<CobotPosition> measurePositions = GeneratePointsBetween(measurePoints, amountOfPoints);
             foreach (CobotPosition measurePosition in measurePositions)
             {
-                _cobotController.DetectObject(measurePosition);
+                CobotPosition returnPosition = measurePosition.Copy();
+                _cobotController.MoveToDirect(measurePosition);
+                while (!_distanceDetector.ObjectDetected)
+                {
+                    _cobotController.MoveStepToObject(_cobotController.GetCobotPosition());
+                }
+
+                CobotPosition objectPosition = _cobotController.GetCobotPosition();
+                measurePosition.X = objectPosition.X;
+                measurePosition.Y = objectPosition.Y;
+                measurePosition.Z = objectPosition.Z;
+                measurePosition.Pitch = objectPosition.Pitch;
+                measurePosition.Roll = objectPosition.Roll;
+                measurePosition.Yaw = objectPosition.Yaw;
+
+                _cobotController.MoveToDirect(returnPosition);
             }
         }
 

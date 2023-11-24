@@ -52,7 +52,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             }
         }
 
-        public void sendCobotMove(float[] point, int speed)
+        public void sendCobotMove(float[] point, float speed)
         {
             string command = $"Move_PTP(\"TPP\",{toText(point)},{speed},200,0,false)";
 
@@ -65,7 +65,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             }
         }
 
-        public void sendCobotPos(float[] point, int speed)
+        public void sendCobotPos(float[] point, float speed)
         {
             string command = $"PTP(\"CPP\",{toText(point)},{speed},200,0,false)";
 

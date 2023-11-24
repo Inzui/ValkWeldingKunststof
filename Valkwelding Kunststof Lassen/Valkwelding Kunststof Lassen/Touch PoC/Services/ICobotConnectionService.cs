@@ -10,8 +10,8 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         Task CheckConnection(string ipAddress);
         int ReadError();
         float[] readPos();
-        void sendCobotMove(float[] point, int speed);
-        void sendCobotPos(float[] point, int speed);
+        void sendCobotMove(float[] point, float speed);
+        void sendCobotPos(float[] point, float speed);
         void StopCobot();
     }
 }

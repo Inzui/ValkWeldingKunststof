@@ -20,7 +20,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
 
         private ICobotConnectionService _cob;
-        public int Speed { get; set; }
+        public float Speed { get; set; }
         public float StepSize { get; set; }
 
         public CobotControllerService(IOptions<LocalConfig> configuration, ICobotConnectionService cobotConnect)
@@ -142,19 +142,13 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             Debug.WriteLine("");
         }
 
-        public void DetectObject(CobotPosition startingPosition)
+        public void MoveStepToObject(CobotPosition startingPosition)
         {
-            MoveToDirect(startingPosition);
-
-            CobotPosition currentPosition = startingPosition;
-            for (int i = 0; i < 5; i++)
-            {
-                currentPosition = GetDetectionPosition(currentPosition);
-                MoveToDirect(currentPosition);
-            }
+            CobotPosition nextPosition = GetNextMovementPosition(startingPosition);
+            MoveToDirect(nextPosition);
         }
 
-        private CobotPosition GetDetectionPosition(CobotPosition startingPosition)
+        private CobotPosition GetNextMovementPosition(CobotPosition startingPosition)
         {
             //Place head in right direction
             float alpha = (float)((-startingPosition.Yaw + 90) * Math.PI / 180.0);
@@ -162,11 +156,8 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             float deltaX = (float)Math.Cos(alpha) * StepSize;
             float deltaY = (float)Math.Sin(alpha) * -StepSize;
 
-            Debug.WriteLine($"alpha: {alpha} -> {deltaX}, {deltaY}");
-
-
             CobotPosition newPosition = startingPosition.Copy();
-            newPosition.X += deltaX; 
+            newPosition.X += deltaX;
             newPosition.Y += deltaY;
 
             return newPosition;
