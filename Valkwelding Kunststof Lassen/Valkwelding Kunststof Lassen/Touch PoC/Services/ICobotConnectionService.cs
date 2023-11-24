@@ -7,5 +7,7 @@
         void sendCobotPos(float[] point, int speed);
 
         int readError();
+
+        void StopCobot();
     }
 }
