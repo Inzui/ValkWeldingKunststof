@@ -10,6 +10,7 @@ using ValkWelding.Welding.Touch_PoC.Configuration;
 using System.Globalization;
 using System.Diagnostics;
 using System.Threading;
+using System.Net;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
 {

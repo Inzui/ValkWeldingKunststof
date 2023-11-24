@@ -91,10 +91,5 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
         {
             return (CobotPosition)this.MemberwiseClone();
         }
-
-        public CobotPosition Copy()
-        {
-            return (CobotPosition)this.MemberwiseClone();
-        }
     }
 }
