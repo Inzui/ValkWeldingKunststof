@@ -7,6 +7,7 @@
     <Nullable>disable</Nullable>
     <UseWPF>true</UseWPF>
     <AssemblyName>ValkWelding.Welding.$(MSBuildProjectName)</AssemblyName>
+	<IncludePackageReferencesDuringMarkupCompilation>false</IncludePackageReferencesDuringMarkupCompilation>
   </PropertyGroup>
 
   <ItemGroup>
