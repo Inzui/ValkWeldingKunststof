@@ -11,6 +11,7 @@ namespace ValkWelding.Welding.Touch_PoC.Configuration
         public string IpAddress { get; set; }
         public int Port { get; set; }
         public float MovementSpeed { get; set; }
-        public float MovementStepSize { get; set; }
+        public float MovementRoughStepSize { get; set; }
+        public float MovementPreciseStepSize { get; set; }
     }
 }

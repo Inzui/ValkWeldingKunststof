@@ -1,12 +1,16 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using ValkWelding.Welding.Touch_PoC.Configuration;
 using ValkWelding.Welding.Touch_PoC.DistanceDetectors;
 using ValkWelding.Welding.Touch_PoC.HelperObjects;
+using ValkWelding.Welding.Touch_PoC.Types;
 using ValkWelding.Welding.Touch_PoC.ViewModels;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
@@ -18,10 +22,13 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         private IDistanceDetector _distanceDetector;
         private SettingsViewModel _settingsViewModel;
 
-        private Timer _getPositionTimer;
+        private System.Timers.Timer _getPositionTimer;
         private bool _busy;
 
-        public PathPlanningService(ICobotConnectionService connectionService, ICobotControllerService cobotController, IDistanceDetector distanceDetector,SettingsViewModel settingsViewModel)
+        private float _roughStepSize;
+        private float _preciseStepSize;
+
+        public PathPlanningService(IOptions<LocalConfig> configuration, ICobotConnectionService connectionService, ICobotControllerService cobotController, IDistanceDetector distanceDetector,SettingsViewModel settingsViewModel)
         {
             _cobotConnectionService = connectionService;
             _cobotController = cobotController;
@@ -32,6 +39,9 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             _getPositionTimer.Elapsed += new ElapsedEventHandler(GetCurrentCobotPositionEvent);
             _getPositionTimer.Interval = 500;
             _busy = false;
+
+            _roughStepSize = configuration.Value.CobotSettings.MovementRoughStepSize;
+            _preciseStepSize = configuration.Value.CobotSettings.MovementPreciseStepSize;
         }
 
         public void Start()
@@ -68,20 +78,36 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             {
                 CobotPosition returnPosition = measurePosition.Copy();
                 _cobotController.MoveToDirect(measurePosition);
-                while (!_distanceDetector.ObjectDetected)
+
+                if (!_distanceDetector.ObjectDetected)
                 {
-                    _cobotController.MoveStepToObject(_cobotController.GetCobotPosition());
+                    // Move forward in bigger steps until an object has been detected.
+                    _cobotController.StepSize = _roughStepSize;
+                    while (!_distanceDetector.ObjectDetected)
+                    {
+                        _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Forward);
+                    }
+                    // Move backward in bigger steps until the object is no longer detected.
+                    while (_distanceDetector.ObjectDetected)
+                    {
+                        _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Backward);
+                    }
+                    // Move forward in small steps until the object is detected again.
+                    _cobotController.StepSize = _preciseStepSize;
+                    while (!_distanceDetector.ObjectDetected)
+                    {
+                        _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Forward);
+                    }
+
+                    CobotPosition objectPosition = _cobotController.GetCobotPosition();
+                    measurePosition.X = objectPosition.X;
+                    measurePosition.Y = objectPosition.Y;
+                    measurePosition.Z = objectPosition.Z;
+                    measurePosition.Pitch = objectPosition.Pitch;
+                    measurePosition.Roll = objectPosition.Roll;
+                    measurePosition.Yaw = objectPosition.Yaw;
+                    _cobotController.MoveToDirect(returnPosition);
                 }
-
-                CobotPosition objectPosition = _cobotController.GetCobotPosition();
-                measurePosition.X = objectPosition.X;
-                measurePosition.Y = objectPosition.Y;
-                measurePosition.Z = objectPosition.Z;
-                measurePosition.Pitch = objectPosition.Pitch;
-                measurePosition.Roll = objectPosition.Roll;
-                measurePosition.Yaw = objectPosition.Yaw;
-
-                _cobotController.MoveToDirect(returnPosition);
             }
         }
 

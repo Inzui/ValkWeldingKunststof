@@ -172,7 +172,7 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
 
         public override string ToString() 
         {
-            return $"ID: {Id}, X: {_x}, Y: {_y}, Z: {_z}, Roll: {_roll}, Pitch: {_pitch}, Yaw: {_yaw}";
+            return $"ID: {_id}, X: {_x}, Y: {_y}, Z: {_z}, Roll: {_roll}, Pitch: {_pitch}, Yaw: {_yaw}";
         }
 
         public static bool operator ==(CobotPosition a, CobotPosition b)
@@ -206,7 +206,7 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
                 return false;
             }
 
-            return (Id == p.Id)
+            return (_id == p._id)
                 && (_x == p._x) 
                 && (_y == p._y) 
                 && (_z == p._z) 
@@ -222,7 +222,7 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
             {
                 return false;
             }
-            return (Id == p.Id)
+            return (_id == p._id)
                 && (_x == p._x) 
                 && (_y == p._y) 
                 && (_z == p._z) 
@@ -232,7 +232,7 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
                 && (_generatePointsBetweenLast == p._generatePointsBetweenLast);
         }
 
-        public void RoundValues(int digits = 1)
+        public void RoundValues(int digits = 2)
         {
             _x = (float)Math.Round(_x, digits);
             _y = (float)Math.Round(_y, digits);
@@ -249,7 +249,7 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, _x, _y, _z, _pitch, _roll, _yaw, _generatePointsBetweenLast);
+            return _id.GetHashCode();
         }
 
     }

@@ -54,7 +54,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
         public void sendCobotMove(float[] point, float speed)
         {
-            string command = $"Move_PTP(\"TPP\",{toText(point)},{speed},200,0,false)";
+            string command = $"Move_Line(\"TPP\",{toText(point)},{speed},200,0,false)";
 
             using (Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp))
             {
@@ -67,7 +67,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
         public void sendCobotPos(float[] point, float speed)
         {
-            string command = $"PTP(\"CPP\",{toText(point)},{speed},200,0,false)";
+            string command = $"Line(\"CPP\",{toText(point)},{speed},200,0,false)";
 
             using (Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp))
             {
