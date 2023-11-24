@@ -7,8 +7,9 @@ using System.Net.Sockets;
 using Modbus.Device;
 using Microsoft.Extensions.Options;
 using ValkWelding.Welding.Touch_PoC.Configuration;
-using System.Net;
+using System.Globalization;
 using System.Diagnostics;
+using System.Threading;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
 {
@@ -93,6 +94,28 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             }
 
             return ret;
+        }
+
+        public void StopCobot()
+        {
+            throw new NotImplementedException();
+            //using (TcpClient client = new TcpClient(ipAddress, 502))
+            //{
+            //    using (ModbusIpMaster master = ModbusIpMaster.CreateIp(client))
+            //    {
+            //        master.WriteSingleCoil(9, false);
+
+            //        master.WriteSingleCoil(7106, false);
+            //        Thread.Sleep(500);
+            //        master.WriteSingleCoil(7106, true);
+            //        Thread.Sleep(500);
+            //        master.WriteSingleCoil(7106, false);
+
+            //        master.WriteSingleCoil(9, true);
+
+            //        Debug.WriteLine("Stopped Cobot");
+            //    }
+            //}
         }
 
         public int readError()

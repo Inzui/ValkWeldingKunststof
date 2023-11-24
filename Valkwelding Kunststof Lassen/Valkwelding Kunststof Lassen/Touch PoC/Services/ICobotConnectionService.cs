@@ -11,5 +11,9 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         float[] readPos();
         void sendCobotMove(float[] point, int speed);
         void sendCobotPos(float[] point, int speed);
+
+        int readError();
+
+        void StopCobot();
     }
 }
