@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,18 +52,38 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
             ViewModel.RemovePositionFromList(ViewModel.SelectedPosition);
         } 
         
-        private void Start_Button_Click(object sender, RoutedEventArgs e)
+        private async void Start_Button_Click(object sender, RoutedEventArgs e)
         {
             if (ViewModel.CobotPositions.Count >= 2)
             {
-                if (_cobotConnectionService.CobotInRunMode && _cobotConnectionService.CobotConnected)
+                try
                 {
-                    ViewModel.AddButtonEnabled = false;
-                    _pathPlanningService.Detect(ViewModel.CobotPositions, 3);
+                    if (_cobotConnectionService.CobotInRunMode && _cobotConnectionService.CobotConnected)
+                    {
+                        ViewModel.ButtonsEnabled = false;
+                        ViewModel.GridReadOnly = true;
+
+                        ObservableCollection<CobotPosition> cobotPositions = ViewModel.CobotPositions;
+                        _settingsViewModel.MessageBoxText = "Running measurements...";
+                        await Task.Run(() =>
+                        {
+                            _pathPlanningService.Detect(cobotPositions, 3);
+                        });
+                        _settingsViewModel.MessageBoxText = "Measurements done";
+                    }
+                    else
+                    {
+                        _settingsViewModel.MessageBoxText = "Cobot not connected or not in Run Mode";
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    _settingsViewModel.MessageBoxText = "Cobot not connected or not in Run Mode";
+                    _settingsViewModel.MessageBoxText = ex.Message;
+                }
+                finally
+                {
+                    ViewModel.ButtonsEnabled = true;
+                    ViewModel.GridReadOnly = false;
                 }
             }
         }

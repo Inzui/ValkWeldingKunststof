@@ -17,13 +17,13 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
         private ObservableCollection<CobotPosition> _cobotPositions;
         private CobotPosition _selectedPosition;
 
-        private bool _addButtonEnabled;
-        private bool _startButtonEnabled;
+        private bool _buttonsEnabled;
+        private bool _gridReadOnly;
 
         public PointListViewModel() 
         {
             _cobotPositions = new();
-            AddButtonEnabled = true;
+            ButtonsEnabled = true;
         }
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -74,33 +74,33 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
             }
         }
         
-        public bool AddButtonEnabled
+        public bool ButtonsEnabled
         {
             get
             {
-                return _addButtonEnabled;
+                return _buttonsEnabled;
             }
             set
             {
-                if (value != _addButtonEnabled)
+                if (value != _buttonsEnabled)
                 {
-                    _addButtonEnabled = value;
+                    _buttonsEnabled = value;
                     OnPropertyChanged();
                 }
             }
         }
         
-        public bool StartButtonEnabled
+        public bool GridReadOnly
         {
             get
             {
-                return _startButtonEnabled;
+                return _gridReadOnly;
             }
             set
             {
-                if (value != _startButtonEnabled)
+                if (value != _gridReadOnly)
                 {
-                    _startButtonEnabled = value;
+                    _gridReadOnly = value;
                     OnPropertyChanged();
                 }
             }

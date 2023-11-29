@@ -35,25 +35,27 @@
                     Content="Add"
                     Grid.Row="1"
                     Click="Add_Button_Click"
-                    IsEnabled="{Binding AddButtonEnabled}"/>
+                    IsEnabled="{Binding ButtonsEnabled}"/>
             <Button Style="{StaticResource ConnectButton}"
                     Margin="10,5"
                     Content="Remove"
                     Grid.Row="1"
                     Grid.Column="1"
                     Click="Remove_Button_Click"
-                    IsEnabled="{Binding AddButtonEnabled}"/>
+                    IsEnabled="{Binding ButtonsEnabled}"/>
         </Grid>
         
         <DataGrid Style="{StaticResource PointListGrid}"
                   Grid.Row="1"
                   ItemsSource="{Binding CobotPositions, Mode=TwoWay}"
-                  SelectedItem="{Binding SelectedPosition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                  SelectedItem="{Binding SelectedPosition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  IsReadOnly="{Binding GridReadOnly}"/>
 
         <Button Style="{StaticResource ConnectButton}"
                 Margin="10,5"
                 Content="Start"
                 Grid.Row="2"
-                Click="Start_Button_Click"/>
+                Click="Start_Button_Click"
+                IsEnabled="{Binding ButtonsEnabled}"/>
     </Grid>
 </UserControl>

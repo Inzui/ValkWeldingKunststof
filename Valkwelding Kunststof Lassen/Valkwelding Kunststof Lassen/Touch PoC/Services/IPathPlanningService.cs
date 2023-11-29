@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ValkWelding.Welding.Touch_PoC.HelperObjects;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
