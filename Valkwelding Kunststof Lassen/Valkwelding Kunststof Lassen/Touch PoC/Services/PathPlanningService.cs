@@ -71,18 +71,30 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             }
         }
 
+        public void ReturnToStartPos(IEnumerable<CobotPosition> cobotPositions)
+        {
+            _cobotController.StepSize = _roughStepSize;
+            IEnumerable<CobotPosition> reversedPositions = cobotPositions.Reverse();
+            foreach (CobotPosition cobotPosition in reversedPositions)
+            {
+                _cobotController.MoveToDirect(cobotPosition);
+            }
+            _cobotController.StepSize = _roughStepSize*2;
+            _cobotController.MoveToDirect(_cobotController.GetBackwardMovementPosition(reversedPositions.Last()));
+        }
+
         public IEnumerable<CobotPosition> Detect(IEnumerable<CobotPosition> measurePoints, int amountOfPoints)
         {
             List<CobotPosition> newMeasurePositions = GeneratePointsBetween(measurePoints, amountOfPoints);
             foreach (CobotPosition measurePosition in newMeasurePositions)
             {
+                _cobotController.StepSize = _roughStepSize;
                 CobotPosition returnPosition = measurePosition.Copy();
                 _cobotController.MoveToDirect(measurePosition);
 
                 if (!_distanceDetector.ObjectDetected)
                 {
                     // Move forward in bigger steps until an object has been detected.
-                    _cobotController.StepSize = _roughStepSize;
                     while (!_distanceDetector.ObjectDetected)
                     {
                         _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Forward);

@@ -49,6 +49,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
                 ViewModel.MessageBoxText = "Connecting...";
                 ViewModel.ConnectButtonEnabled = false;
                 await ViewModel.CobotConnectionService.CheckConnection(ViewModel.CobotIpAddress);
+                _cobotControllerService.StopMill();
                 ViewModel.MessageBoxText = "Connected";
             }
             catch (Exception ex)
@@ -71,9 +72,16 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
                     ViewModel.StartButtonEnabled = false;
                     _pointListViewModel.ButtonsEnabled = false;
 
+                    ViewModel.MessageBoxText = "Returning to starting position...";
                     await Task.Run(() =>
                     {
-                        _cobotControllerService.Mill(_pointListViewModel.MeasuredPositions);
+                        _pathPlanningService.ReturnToStartPos(_pointListViewModel.MeasuredPositions);
+                    });
+                    
+                    ViewModel.MessageBoxText = "Milling...";
+                    await Task.Run(() =>
+                    {
+                        _cobotControllerService.StartMillSequence(_pointListViewModel.MeasuredPositions);
                     });
                 }
                 else

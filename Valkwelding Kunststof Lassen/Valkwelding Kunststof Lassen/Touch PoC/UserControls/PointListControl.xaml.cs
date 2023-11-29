@@ -29,6 +29,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
         private readonly SettingsViewModel _settingsViewModel;
         private readonly IPathPlanningService _pathPlanningService;
         private readonly ICobotConnectionService _cobotConnectionService;
+        private readonly ICobotControllerService _cobotControllerService;
 
         public PointListControl()
         {
@@ -36,6 +37,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
             _settingsViewModel = App.GetService<SettingsViewModel>();
             _pathPlanningService = App.GetService<IPathPlanningService>();
             _cobotConnectionService = App.GetService<ICobotConnectionService>();
+            _cobotControllerService = App.GetService<ICobotControllerService>();
 
             InitializeComponent();
         }
@@ -63,9 +65,15 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
                         _settingsViewModel.StartButtonEnabled = false;
                         ViewModel.ButtonsEnabled = false;
                         ViewModel.GridReadOnly = true;
-                        _settingsViewModel.MessageBoxText = "Running measurements...";
 
+                        _settingsViewModel.MessageBoxText = "Returning to starting position...";
                         ObservableCollection<CobotPosition> measuredPositions = ViewModel.ToMeasurePositions;
+                        await Task.Run(() =>
+                        {
+                            _pathPlanningService.ReturnToStartPos(measuredPositions);
+                        });
+
+                        _settingsViewModel.MessageBoxText = "Running measurements...";
                         await Task.Run(() =>
                         {
                             measuredPositions = new(_pathPlanningService.Detect(measuredPositions, 2));
