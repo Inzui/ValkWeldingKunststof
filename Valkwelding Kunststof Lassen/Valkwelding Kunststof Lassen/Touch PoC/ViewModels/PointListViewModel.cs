@@ -31,17 +31,15 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        #warning FIX REMOVE
         public void RemovePositionFromList(CobotPosition pos)
         {
-            _cobotPositions.Remove(_cobotPositions.First(x => x.Id == pos.Id));
+            _cobotPositions.Remove(pos);
             SelectedPosition = null;
             
             for (int i = pos.Id;  i < _cobotPositions.Count; i++)
             {
                 CobotPositions.ElementAt(i).Id = i;
             }
-            OnPropertyChanged();
         }
 
         public ObservableCollection<CobotPosition> CobotPositions

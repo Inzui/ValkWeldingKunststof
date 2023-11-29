@@ -42,7 +42,7 @@
                     Grid.Row="1"
                     Grid.Column="1"
                     Click="Remove_Button_Click"
-                    IsEnabled="False"/>
+                    IsEnabled="{Binding AddButtonEnabled}"/>
         </Grid>
         
         <DataGrid Style="{StaticResource PointListGrid}"
