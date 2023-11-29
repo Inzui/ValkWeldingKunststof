@@ -14,7 +14,8 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private ObservableCollection<CobotPosition> _cobotPositions;
+        private ObservableCollection<CobotPosition> _toMeasurePositions;
+        private ObservableCollection<CobotPosition> _measuredPositions;
         private CobotPosition _selectedPosition;
 
         private bool _buttonsEnabled;
@@ -22,7 +23,7 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
 
         public PointListViewModel() 
         {
-            _cobotPositions = new();
+            _toMeasurePositions = new();
             ButtonsEnabled = true;
         }
 
@@ -33,26 +34,42 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
 
         public void RemovePositionFromList(CobotPosition pos)
         {
-            _cobotPositions.Remove(pos);
+            _toMeasurePositions.Remove(pos);
             SelectedPosition = null;
             
-            for (int i = pos.Id;  i < _cobotPositions.Count; i++)
+            for (int i = pos.Id;  i < _toMeasurePositions.Count; i++)
             {
-                CobotPositions.ElementAt(i).Id = i;
+                ToMeasurePositions.ElementAt(i).Id = i;
             }
         }
 
-        public ObservableCollection<CobotPosition> CobotPositions
+        public ObservableCollection<CobotPosition> ToMeasurePositions
         {
             get
             {
-                return _cobotPositions;
+                return _toMeasurePositions;
             }
             set
             {
-                if (value != _cobotPositions)
+                if (value != _toMeasurePositions)
                 {
-                    _cobotPositions = value;
+                    _toMeasurePositions = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        
+        public ObservableCollection<CobotPosition> MeasuredPositions
+        {
+            get
+            {
+                return _measuredPositions;
+            }
+            set
+            {
+                if (value != _measuredPositions)
+                {
+                    _measuredPositions = value;
                     OnPropertyChanged();
                 }
             }

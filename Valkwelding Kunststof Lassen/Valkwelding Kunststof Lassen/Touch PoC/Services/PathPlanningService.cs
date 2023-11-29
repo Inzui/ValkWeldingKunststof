@@ -71,10 +71,10 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             }
         }
 
-        public void Detect(IEnumerable<CobotPosition> measurePoints, int amountOfPoints)
+        public IEnumerable<CobotPosition> Detect(IEnumerable<CobotPosition> measurePoints, int amountOfPoints)
         {
-            List<CobotPosition> measurePositions = GeneratePointsBetween(measurePoints, amountOfPoints);
-            foreach (CobotPosition measurePosition in measurePositions)
+            List<CobotPosition> newMeasurePositions = GeneratePointsBetween(measurePoints, amountOfPoints);
+            foreach (CobotPosition measurePosition in newMeasurePositions)
             {
                 CobotPosition returnPosition = measurePosition.Copy();
                 _cobotController.MoveToDirect(measurePosition);
@@ -109,6 +109,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                     _cobotController.MoveToDirect(returnPosition);
                 }
             }
+            return newMeasurePositions;
         }
 
         private List<CobotPosition> GeneratePointsBetween(IEnumerable<CobotPosition> measurePoints, int amountOfPoints)
@@ -137,7 +138,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                             Yaw = generatedPoints.Last().Yaw + distributionJaw,
                             Pitch = currPos.Pitch,
                             Roll = currPos.Roll,
-                            GeneratePointsBetweenLast = true
+                            GeneratePointsBetweenLast = false
                         });
                     }
                 }

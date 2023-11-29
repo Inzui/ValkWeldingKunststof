@@ -47,13 +47,13 @@
         
         <DataGrid Style="{StaticResource PointListGrid}"
                   Grid.Row="1"
-                  ItemsSource="{Binding CobotPositions, Mode=TwoWay}"
+                  ItemsSource="{Binding ToMeasurePositions, Mode=TwoWay}"
                   SelectedItem="{Binding SelectedPosition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   IsReadOnly="{Binding GridReadOnly}"/>
 
         <Button Style="{StaticResource ConnectButton}"
                 Margin="10,5"
-                Content="Start"
+                Content="Start measuring"
                 Grid.Row="2"
                 Click="Start_Button_Click"
                 IsEnabled="{Binding ButtonsEnabled}"/>

@@ -51,5 +51,9 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
                 ViewModel.ConnectButtonEnabled = true;
             }
         }
+
+        private async void Start_Button_Click(object sender, RoutedEventArgs e)
+        {
+        }
     }
 }

@@ -14,7 +14,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="2*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.25*"/>
         </Grid.RowDefinitions>
 
         <StackPanel>
@@ -113,5 +113,11 @@
                 </StackPanel>
             </Grid>
             </Border>
+        <Button Style="{StaticResource ConnectButton}"
+                Margin="10,5"
+                Content="Start milling"
+                Grid.Row="2"
+                Click="Start_Button_Click"
+                IsEnabled="{Binding StartButtonEnabled}"/>
     </Grid>
 </UserControl>

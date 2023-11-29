@@ -43,8 +43,8 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
         private void Add_Button_Click(object sender, RoutedEventArgs e)
         {
             CobotPosition selectedPos = _settingsViewModel.CurrentCobotPosition.Copy();
-            selectedPos.Id = ViewModel.CobotPositions.Count;
-            ViewModel.CobotPositions.Add(selectedPos);
+            selectedPos.Id = ViewModel.ToMeasurePositions.Count;
+            ViewModel.ToMeasurePositions.Add(selectedPos);
         }
 
         private void Remove_Button_Click(object sender, RoutedEventArgs e)
@@ -54,21 +54,24 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
         
         private async void Start_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.CobotPositions.Count >= 2)
+            if (ViewModel.ToMeasurePositions.Count >= 2)
             {
                 try
                 {
                     if (_cobotConnectionService.CobotInRunMode && _cobotConnectionService.CobotConnected)
                     {
+                        _settingsViewModel.StartButtonEnabled = false;
                         ViewModel.ButtonsEnabled = false;
                         ViewModel.GridReadOnly = true;
-
-                        ObservableCollection<CobotPosition> cobotPositions = ViewModel.CobotPositions;
                         _settingsViewModel.MessageBoxText = "Running measurements...";
+
+                        ObservableCollection<CobotPosition> measuredPositions = ViewModel.ToMeasurePositions;
                         await Task.Run(() =>
                         {
-                            _pathPlanningService.Detect(cobotPositions, 3);
+                            measuredPositions = new(_pathPlanningService.Detect(measuredPositions, 2));
                         });
+                        ViewModel.MeasuredPositions = measuredPositions;
+                        _settingsViewModel.StartButtonEnabled = true;
                         _settingsViewModel.MessageBoxText = "Measurements done";
                     }
                     else

@@ -16,6 +16,7 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
         private string _messageBox;
         private string _cobotIpAddress;
         private bool _connectButtonEnabled;
+        private bool _startButtonEnabled;
 
         public SettingsViewModel(IOptions<LocalConfig> configuration, ICobotConnectionService cobotConnectionService)
         {
@@ -94,6 +95,22 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
                 if (value != _connectButtonEnabled)
                 {
                     _connectButtonEnabled = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        
+        public bool StartButtonEnabled
+        {
+            get
+            {
+                return _startButtonEnabled;
+            }
+            set
+            {
+                if (value != _startButtonEnabled)
+                {
+                    _startButtonEnabled = value;
                     OnPropertyChanged();
                 }
             }
