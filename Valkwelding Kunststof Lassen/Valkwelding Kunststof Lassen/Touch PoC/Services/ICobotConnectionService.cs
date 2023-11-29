@@ -12,6 +12,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         float[] readPos();
         void sendCobotMove(float[] point, float speed);
         void sendCobotPos(float[] point, float speed);
+        void SetCoilValue(int address, bool value);
         void StopCobot();
     }
 }

@@ -156,18 +156,21 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
             }
         }
 
-        public bool EqualPosition(CobotPosition otherPos)
+        /// <summary>
+        /// Checks if the two CobotPosition's X, Y, Z and Yaw are equal. Pitch and Roll will not be compared!
+        /// </summary>
+        /// <param name="otherPos"></param>
+        /// <returns></returns>
+        public bool EqualPosition(CobotPosition otherPos, double precision)
         {
             if (otherPos is null)
             {
                 return false;
             }
-            return (_x == otherPos._x)
-                && (_y == otherPos._y)
-                && (_z == otherPos._z)
-                && (_pitch == otherPos._pitch)
-                && (_roll == otherPos._roll)
-                && (_yaw == otherPos._yaw);
+            return (Math.Abs(_x - otherPos._x) <= precision)
+                && (Math.Abs(_y - otherPos._y) <= precision)
+                && (Math.Abs(_z - otherPos._z) <= precision)
+                && (Math.Abs(_yaw - otherPos._yaw) <= precision);
         }
 
         public override string ToString() 
@@ -232,7 +235,7 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
                 && (_generatePointsBetweenLast == p._generatePointsBetweenLast);
         }
 
-        public void RoundValues(int digits = 2)
+        public void RoundValues(int digits = 1)
         {
             _x = (float)Math.Round(_x, digits);
             _y = (float)Math.Round(_y, digits);

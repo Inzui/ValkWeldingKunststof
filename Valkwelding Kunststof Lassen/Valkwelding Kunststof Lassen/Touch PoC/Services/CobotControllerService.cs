@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using ValkWelding.Welding.Touch_PoC.Configuration;
 using ValkWelding.Welding.Touch_PoC.HelperObjects;
 using ValkWelding.Welding.Touch_PoC.Types;
@@ -15,25 +17,30 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
         public CobotControllerService(IOptions<LocalConfig> configuration, ICobotConnectionService cobotConnect)
         {
-            this._cob = cobotConnect;
+            _cob = cobotConnect;
             Speed = configuration.Value.CobotSettings.MovementSpeed;
+        }
+
+        public void Mill(IEnumerable<CobotPosition> cobotPositions)
+        {
+            IEnumerable<CobotPosition> reversedPositions = cobotPositions.Reverse();
+            StartMill();
+            foreach (CobotPosition cobotPosition in reversedPositions)
+            {
+                MoveToDirect(cobotPosition);
+            }
+            StopMill();
         }
 
         public void MoveToDirect(CobotPosition destination)
         {
             CobotPosition currentPos = GetCobotPosition();
-            destination.RoundValues();
-            currentPos.RoundValues();
-
             float[] desPosArray = { destination.X, destination.Y, destination.Z, destination.Roll, destination.Pitch, destination.Yaw };
-
             _cob.sendCobotPos(desPosArray, Speed);
 
-            while (!currentPos.EqualPosition(destination))
+            while (!currentPos.EqualPosition(destination, StepSize/2))
             {
                 currentPos = GetCobotPosition();
-                currentPos.RoundValues();
-                //Debug.WriteLine($"Current: {currentPos} \nDest: {desPos}\n===========");
             }
         }
 
@@ -106,6 +113,16 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             newPosition.Y -= deltaY;
 
             return newPosition;
+        }
+
+        private void StartMill()
+        {
+            _cob.SetCoilValue(7206, true);
+        }
+
+        private void StopMill()
+        {
+            _cob.SetCoilValue(7206, false);
         }
     }
 }

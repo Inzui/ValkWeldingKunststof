@@ -120,6 +120,20 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             //}
         }
 
+        public void SetCoilValue(int address, bool value)
+        {
+            using (TcpClient client = new TcpClient(_ipAddress, 502))
+            {
+                using (ModbusIpMaster master = ModbusIpMaster.CreateIp(client))
+                {
+                    if(master.ReadCoils((ushort)address, 1)[0] != value)
+                    {
+                        master.WriteSingleCoil((ushort)address, value);
+                    }
+                }
+            }
+        }
+
         public int ReadError()
         {
             if (!string.IsNullOrEmpty(_ipAddress))

@@ -26,9 +26,19 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
     {
         public SettingsViewModel ViewModel { get => (SettingsViewModel)DataContext; }
 
+        private readonly PointListViewModel _pointListViewModel;
+        private readonly IPathPlanningService _pathPlanningService;
+        private readonly ICobotConnectionService _cobotConnectionService;
+        private readonly ICobotControllerService _cobotControllerService;
+
         public SettingsControl()
         {
             DataContext = App.GetService<SettingsViewModel>();
+            _pointListViewModel = App.GetService<PointListViewModel>();
+            _pathPlanningService = App.GetService<IPathPlanningService>();
+            _cobotConnectionService = App.GetService<ICobotConnectionService>();
+            _cobotControllerService = App.GetService<ICobotControllerService>();
+
             InitializeComponent();
         }
 
@@ -54,6 +64,32 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
 
         private async void Start_Button_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                if (_cobotConnectionService.CobotInRunMode && _cobotConnectionService.CobotConnected)
+                {
+                    ViewModel.StartButtonEnabled = false;
+                    _pointListViewModel.ButtonsEnabled = false;
+
+                    await Task.Run(() =>
+                    {
+                        _cobotControllerService.Mill(_pointListViewModel.MeasuredPositions);
+                    });
+                }
+                else
+                {
+                    ViewModel.MessageBoxText = "Cobot not connected or not in Run Mode";
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewModel.MessageBoxText = ex.Message;
+            }
+            finally
+            {
+                ViewModel.StartButtonEnabled = true;
+                _pointListViewModel.ButtonsEnabled = true;
+            }
         }
     }
 }

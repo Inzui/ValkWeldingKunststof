@@ -28,7 +28,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         private float _roughStepSize;
         private float _preciseStepSize;
 
-        public PathPlanningService(IOptions<LocalConfig> configuration, ICobotConnectionService connectionService, ICobotControllerService cobotController, IDistanceDetector distanceDetector,SettingsViewModel settingsViewModel)
+        public PathPlanningService(IOptions<LocalConfig> configuration, ICobotConnectionService connectionService, ICobotControllerService cobotController, IDistanceDetector distanceDetector, SettingsViewModel settingsViewModel)
         {
             _cobotConnectionService = connectionService;
             _cobotController = cobotController;
@@ -128,7 +128,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                     float distributionZ = (currPos.Z - previousPos.Z) / amountOfPoints;
                     float distributionJaw = (currPos.Yaw - previousPos.Yaw) / amountOfPoints;
 
-                    for (int j = 0; j < amountOfPoints -1; j++)
+                    for (int j = 0; j < amountOfPoints - 1; j++)
                     {
                         generatedPoints.Add(new CobotPosition()
                         {
