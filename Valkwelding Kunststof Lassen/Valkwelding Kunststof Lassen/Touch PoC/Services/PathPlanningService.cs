@@ -83,9 +83,9 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             _cobotController.MoveToDirect(_cobotController.GetBackwardMovementPosition(reversedPositions.Last()));
         }
 
-        public IEnumerable<CobotPosition> Detect(IEnumerable<CobotPosition> measurePoints, int amountOfPoints)
+        public IEnumerable<CobotPosition> Detect(IEnumerable<CobotPosition> measurePoints)
         {
-            List<CobotPosition> newMeasurePositions = GeneratePointsBetween(measurePoints, amountOfPoints);
+            List<CobotPosition> newMeasurePositions = GeneratePointsBetween(measurePoints);
             foreach (CobotPosition measurePosition in newMeasurePositions)
             {
                 _cobotController.StepSize = _roughStepSize;
@@ -124,7 +124,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             return newMeasurePositions;
         }
 
-        private List<CobotPosition> GeneratePointsBetween(IEnumerable<CobotPosition> measurePoints, int amountOfPoints)
+        private List<CobotPosition> GeneratePointsBetween(IEnumerable<CobotPosition> measurePoints)
         {
             List<CobotPosition> generatedPoints = new() { measurePoints.First() };
 
@@ -133,14 +133,14 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                 CobotPosition previousPos = measurePoints.ElementAt(i - 1);
                 CobotPosition currPos = measurePoints.ElementAt(i);
 
-                if (currPos.GeneratePointsBetweenLast)
+                if (currPos.PointsToGenerateBetweenLast > 0)
                 {
-                    float distributionX = (currPos.X - previousPos.X) / amountOfPoints;
-                    float distributionY = (currPos.Y - previousPos.Y) / amountOfPoints;
-                    float distributionZ = (currPos.Z - previousPos.Z) / amountOfPoints;
-                    float distributionJaw = (currPos.Yaw - previousPos.Yaw) / amountOfPoints;
+                    float distributionX = (currPos.X - previousPos.X) / currPos.PointsToGenerateBetweenLast;
+                    float distributionY = (currPos.Y - previousPos.Y) / currPos.PointsToGenerateBetweenLast;
+                    float distributionZ = (currPos.Z - previousPos.Z) / currPos.PointsToGenerateBetweenLast;
+                    float distributionJaw = (currPos.Yaw - previousPos.Yaw) / currPos.PointsToGenerateBetweenLast;
 
-                    for (int j = 0; j < amountOfPoints - 1; j++)
+                    for (int j = 0; j < currPos.PointsToGenerateBetweenLast - 1; j++)
                     {
                         generatedPoints.Add(new CobotPosition()
                         {
@@ -150,7 +150,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                             Yaw = generatedPoints.Last().Yaw + distributionJaw,
                             Pitch = currPos.Pitch,
                             Roll = currPos.Roll,
-                            GeneratePointsBetweenLast = false
+                            PointsToGenerateBetweenLast = 0
                         });
                     }
                 }

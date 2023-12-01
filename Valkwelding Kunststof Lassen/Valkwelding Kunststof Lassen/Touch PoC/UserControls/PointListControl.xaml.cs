@@ -76,7 +76,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
                         _settingsViewModel.MessageBoxText = "Running measurements...";
                         await Task.Run(() =>
                         {
-                            measuredPositions = new(_pathPlanningService.Detect(measuredPositions, 2));
+                            measuredPositions = new(_pathPlanningService.Detect(measuredPositions));
                         });
                         ViewModel.MeasuredPositions = measuredPositions;
                         _settingsViewModel.StartButtonEnabled = true;
