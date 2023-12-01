@@ -10,7 +10,7 @@ namespace ValkWelding.Welding.Touch_PoC.Types
     {
         Unknown = 0x0,
         StartDetecting = 0x01,
-        SendDetectionValue = 0x02,
-        Received = 0x04
+        EnableProbe = 0x02,
+        Synced = 0x04
     }
 }

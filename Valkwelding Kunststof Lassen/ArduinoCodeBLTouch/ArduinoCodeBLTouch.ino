@@ -1,20 +1,26 @@
-#define TOUCH_SENSOR_PIN 2
-#define START_DETECTING 0x01
-#define RECEIVED 0x04
-#include <Servo.h>
+#include <Servo.h> 
 
-Servo myservo;
+#define TOUCH_SENSOR_PIN 2
+#define PROBE_PIN 9
+#define PROBE_INWARD 90
+#define PROBE_OUTWARD 10
+
+#define START_DETECTING 0x01
+#define ENABLE_PROBE 0x02
+#define SYNCED 0x04
+
+Servo probe;
 bool started = false;
 bool detected = false;
 
-void setup() {
+void setup() { 
   Serial.begin(115200);
-  myservo.attach(9);
   pinMode(TOUCH_SENSOR_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(TOUCH_SENSOR_PIN), detect, RISING);
-}
-
-void loop() {
+  probe.attach(PROBE_PIN);
+  probe.write(PROBE_INWARD);
+} 
+ 
+void loop() { 
   int incomingByte = 0x00;
   while (Serial.available() > 0) {
     incomingByte = Serial.read();
@@ -23,20 +29,20 @@ void loop() {
     started = true;
     Serial.write(started);
   }
-  if (incomingByte & RECEIVED) {
+  if (incomingByte & ENABLE_PROBE) {
+    probe.write(PROBE_OUTWARD);
+    detected = false;
+  }
+  if (incomingByte & SYNCED) {
   }
 
   if (started) {
-    // HIER SCHRIJVEN
-    myservo.write(10);
-    if (detected) {
-      myservo.write(90);
-      detected = false;
+    if (!detected) {
+      detected = digitalRead(TOUCH_SENSOR_PIN);
+      if (detected) {
+        probe.write(PROBE_INWARD);
+      }
     }
-    Serial.write(!digitalRead(TOUCH_SENSOR_PIN));
+    Serial.write(detected);
   }
-}
-
-void detect() {
-  detected = true;
 }

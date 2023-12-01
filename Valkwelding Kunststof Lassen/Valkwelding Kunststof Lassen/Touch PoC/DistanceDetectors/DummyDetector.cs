@@ -11,10 +11,10 @@ namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
 {
     public class DummyDetector : IDistanceDetector
     {
+        public bool Connected { get; }
         public bool ObjectDetected { get; set; }
 
-        public void Start()
-        {
-        }
+        public void Start() { }
+        public void EnableProbe() { }
     }
 }

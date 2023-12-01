@@ -11,8 +11,19 @@ namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
 {
     public class TouchDetector : IDistanceDetector
     {
-        public bool ObjectDetected { get; set; }
+        public bool Connected { get { return _connected; } private set { } }
 
+        public bool ObjectDetected 
+        { 
+            get 
+            {
+                SendCommand(DetectorCommand.Synced);
+                return _objectDetected;
+            }
+            set { } 
+        }
+
+        private bool _objectDetected;
         private readonly SerialPort _serialPort;
         private bool _connected;
 
@@ -35,7 +46,7 @@ namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
             serialPort.Read(recvData, 0, _bytesToRead);
 
             _connected = true;
-            ObjectDetected = recvData.Last() == 1;
+            _objectDetected = recvData.Last() == 1;
         }
 
         public void Start()
@@ -45,6 +56,11 @@ namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
             {
                 SendCommand(DetectorCommand.StartDetecting);
             }
+        }
+
+        public void EnableProbe()
+        {
+            SendCommand(DetectorCommand.EnableProbe);
         }
 
         private void SendCommand(DetectorCommand command)

@@ -2,8 +2,10 @@
 {
     public interface IDistanceDetector
     {
-        bool ObjectDetected { get; set; }
+        bool Connected { get; }
+        bool ObjectDetected { get; }
 
         void Start();
+        void EnableProbe();
     }
 }
