@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ValkWelding.Welding.Touch_PoC.UserControls"
+             xmlns:types="clr-namespace:ValkWelding.Welding.Touch_PoC.Types"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="500">
     <UserControl.Resources>
@@ -59,7 +60,16 @@
                 <DataGridTextColumn Header="Pitch" Binding="{Binding Pitch}"/>
                 <DataGridTextColumn Header="Roll" Binding="{Binding Roll}"/>
                 <DataGridTextColumn Header="Yaw" Binding="{Binding Yaw}"/>
-                <DataGridTextColumn Header="Points Between Last" Binding="{Binding PointsToGenerateBetweenLast}" Width="2.5*"/>
+                <DataGridTextColumn Header="Points Between" Binding="{Binding PointsToGenerateBetweenLast}" Width="2.5*"/>
+                <DataGridTemplateColumn Header="Type" Width="1.5*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox Style="{StaticResource PointListGridComboBox}"
+                                      ItemsSource="{Binding PointTypeDefinitionValues}"
+                                      SelectedItem="{Binding PointType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
 

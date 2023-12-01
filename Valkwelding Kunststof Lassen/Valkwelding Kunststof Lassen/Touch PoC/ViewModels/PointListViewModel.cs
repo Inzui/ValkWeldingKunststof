@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using ValkWelding.Welding.Touch_PoC.HelperObjects;
+using ValkWelding.Welding.Touch_PoC.Types;
 
 namespace ValkWelding.Welding.Touch_PoC.ViewModels
 {
@@ -34,12 +35,15 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
 
         public void RemovePositionFromList(CobotPosition pos)
         {
-            _toMeasurePositions.Remove(pos);
-            SelectedPosition = null;
-            
-            for (int i = pos.Id;  i < _toMeasurePositions.Count; i++)
+            if (pos != null)
             {
-                ToMeasurePositions.ElementAt(i).Id = i;
+                _toMeasurePositions.Remove(pos);
+                SelectedPosition = null;
+
+                for (int i = pos.Id;  i < _toMeasurePositions.Count; i++)
+                {
+                    ToMeasurePositions.ElementAt(i).Id = i;
+                }
             }
         }
 

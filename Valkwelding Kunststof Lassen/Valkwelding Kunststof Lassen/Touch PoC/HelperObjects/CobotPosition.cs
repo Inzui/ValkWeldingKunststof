@@ -7,6 +7,7 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using ValkWelding.Welding.Touch_PoC.Types;
 
 namespace ValkWelding.Welding.Touch_PoC.HelperObjects
 {
@@ -20,6 +21,7 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
         private float _roll;
         private float _yaw;
         private int _pointsToGenerateBetweenLast;
+        private PointTypeDefinition _pointType;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -154,6 +156,30 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
                     OnPropertyChanged();
                 }
             }
+        } 
+        
+        public PointTypeDefinition PointType
+        {
+            get
+            {
+                return _pointType;
+            }
+            set
+            {
+                if (value != _pointType)
+                {
+                    _pointType = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public IEnumerable<PointTypeDefinition> PointTypeDefinitionValues
+        {
+            get
+            {
+                return Enum.GetValues(typeof(PointTypeDefinition)).Cast<PointTypeDefinition>();
+            }
         }
 
         /// <summary>
@@ -216,7 +242,8 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
                 && (_pitch == p._pitch) 
                 && (_roll == p._roll) 
                 && (_yaw == p._yaw) 
-                && (_pointsToGenerateBetweenLast == p._pointsToGenerateBetweenLast);
+                && (_pointsToGenerateBetweenLast == p._pointsToGenerateBetweenLast)
+                && (_pointType == p._pointType);
         }
 
         public bool Equals(CobotPosition p)
@@ -232,7 +259,8 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
                 && (_pitch == p._pitch) 
                 && (_roll == p._roll) 
                 && (_yaw == p._yaw) 
-                && (_pointsToGenerateBetweenLast == p._pointsToGenerateBetweenLast);
+                && (_pointsToGenerateBetweenLast == p._pointsToGenerateBetweenLast)
+                && (_pointType == p._pointType);
         }
 
         public void RoundValues(int digits = 1)
