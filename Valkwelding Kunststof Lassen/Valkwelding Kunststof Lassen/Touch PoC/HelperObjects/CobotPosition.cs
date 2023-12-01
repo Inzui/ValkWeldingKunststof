@@ -19,7 +19,7 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
         private float _pitch;
         private float _roll;
         private float _yaw;
-        private bool _generatePointsBetweenLast;
+        private int _pointsToGenerateBetweenLast;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -140,17 +140,17 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
             }
         }
 
-        public bool GeneratePointsBetweenLast
+        public int PointsToGenerateBetweenLast
         {
             get
             {
-                return _generatePointsBetweenLast;
+                return _pointsToGenerateBetweenLast;
             }
             set
             {
-                if (value != _generatePointsBetweenLast)
+                if (value != _pointsToGenerateBetweenLast)
                 {
-                    _generatePointsBetweenLast = value;
+                    _pointsToGenerateBetweenLast = value;
                     OnPropertyChanged();
                 }
             }
@@ -216,7 +216,7 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
                 && (_pitch == p._pitch) 
                 && (_roll == p._roll) 
                 && (_yaw == p._yaw) 
-                && (_generatePointsBetweenLast == p._generatePointsBetweenLast);
+                && (_pointsToGenerateBetweenLast == p._pointsToGenerateBetweenLast);
         }
 
         public bool Equals(CobotPosition p)
@@ -232,7 +232,7 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
                 && (_pitch == p._pitch) 
                 && (_roll == p._roll) 
                 && (_yaw == p._yaw) 
-                && (_generatePointsBetweenLast == p._generatePointsBetweenLast);
+                && (_pointsToGenerateBetweenLast == p._pointsToGenerateBetweenLast);
         }
 
         public void RoundValues(int digits = 1)
@@ -254,6 +254,5 @@ namespace ValkWelding.Welding.Touch_PoC.HelperObjects
         {
             return _id.GetHashCode();
         }
-
     }
 }
