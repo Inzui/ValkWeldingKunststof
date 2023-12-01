@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ValkWelding.Welding.Touch_PoC.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="400">
+             d:DesignHeight="450" d:DesignWidth="500">
     <UserControl.Resources>
         <ResourceDictionary Source="Stylesheet.xaml"/>
     </UserControl.Resources>
@@ -44,12 +44,24 @@
                     Click="Remove_Button_Click"
                     IsEnabled="{Binding ButtonsEnabled}"/>
         </Grid>
-        
+
         <DataGrid Style="{StaticResource PointListGrid}"
                   Grid.Row="1"
                   ItemsSource="{Binding ToMeasurePositions, Mode=TwoWay}"
                   SelectedItem="{Binding SelectedPosition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  IsReadOnly="{Binding GridReadOnly}"/>
+                  IsReadOnly="{Binding GridReadOnly}"
+                  x:Name="PointListGrid">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="X" Binding="{Binding X}"/>
+                <DataGridTextColumn Header="Y" Binding="{Binding Y}"/>
+                <DataGridTextColumn Header="Z" Binding="{Binding Z}"/>
+                <DataGridTextColumn Header="Pitch" Binding="{Binding Pitch}"/>
+                <DataGridTextColumn Header="Roll" Binding="{Binding Roll}"/>
+                <DataGridTextColumn Header="Yaw" Binding="{Binding Yaw}"/>
+                <DataGridTextColumn Header="Points Between Last" Binding="{Binding PointsToGenerateBetweenLast}" Width="2.5*"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
         <Button Style="{StaticResource ConnectButton}"
                 Margin="10,5"

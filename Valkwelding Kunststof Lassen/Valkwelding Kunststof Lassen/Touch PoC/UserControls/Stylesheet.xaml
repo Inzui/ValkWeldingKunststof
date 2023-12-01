@@ -51,7 +51,7 @@
         <Setter Property="AlternatingRowBackground" Value="#FF1F1F1F"/>
         <Setter Property="Foreground" Value="LightGray"/>
         <Setter Property="HeadersVisibility" Value="Column"/>
-        <Setter Property="AutoGenerateColumns" Value="True"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
         <Setter Property="CanUserSortColumns" Value="False"/>
         <Setter Property="CanUserAddRows" Value="False"/>
         <Setter Property="CanUserDeleteRows" Value="False"/>
