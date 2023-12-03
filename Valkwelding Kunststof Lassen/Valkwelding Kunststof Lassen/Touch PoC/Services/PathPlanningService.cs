@@ -123,7 +123,36 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             }
             return newMeasurePositions;
         }
+#warning Need to check if Yaw is 0 degrees when pointing forwards
+        private CobotPosition GetCornerPosition(CobotPosition positionOne, CobotPosition positionTwo)
+        {
+            //Convert the Yaw degrees into a slope
+            double slopeOne = Math.Tan((double)((-positionOne.Yaw + 90) * Math.PI / 180.0)); 
+            double slopeTwo = Math.Tan((double)((-positionTwo.Yaw + 90) * Math.PI / 180.0));
 
+            //Convert old slope into new perpendicular slope
+            double perpSlopeOne = -1 / slopeOne;
+            double perpSlopeTwo = -1 / slopeTwo;
+
+            //Calculate b value for perpendicular line
+            double perpBOne = positionOne.Y - perpSlopeOne * positionOne.X;
+            double perpBTwo = positionTwo.Y - perpSlopeTwo * positionTwo.X;
+
+            //Calcualte Intersion points between two perpendicular lines
+            double xIntersection = (perpBTwo - perpBOne) / (perpSlopeOne - perpSlopeTwo);
+            double yIntersection = (perpSlopeOne * xIntersection) + perpBOne;
+
+            //Create new position where the two perpendicular lines meet
+            CobotPosition cornerPosition = positionOne.Copy();
+            cornerPosition.X = (float)xIntersection;
+            cornerPosition.Y = (float)yIntersection;
+
+            //Calculate new Yaw by taking average of old two yaw positions
+            //Check if this works with the yaw positioning (taking 360 degrees into account)
+            cornerPosition.Yaw = (positionOne.Yaw + positionTwo.Yaw) / 2;
+
+            return cornerPosition;
+        }
         private List<CobotPosition> GeneratePointsBetween(IEnumerable<CobotPosition> measurePoints)
         {
             List<CobotPosition> generatedPoints = new() { measurePoints.First() };
