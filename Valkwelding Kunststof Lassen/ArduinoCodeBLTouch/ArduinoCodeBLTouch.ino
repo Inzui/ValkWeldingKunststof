@@ -5,15 +5,23 @@
 #define PROBE_INWARD 90
 #define PROBE_OUTWARD 10
 
-#define START_DETECTING 0x01
-#define ENABLE_PROBE 0x02
-#define SYNCED 0x04
+// Incoming commands
+#define HEARTBEAT 0x01
+#define START_DETECTING 0x02
+#define REQUEST_OBJECT_DETECTED 0x04
+
+// Outgoing commands
+#define SUCCES 0x1
+#define OBJECT_DETECTED 0x2
+#define OBJECT_NOT_DETECTED 0x4
 
 Servo probe;
-bool started = false;
+bool detecting = false;
 bool detected = false;
 
 void setup() { 
+  pinMode(13, OUTPUT);
+
   Serial.begin(115200);
   pinMode(TOUCH_SENSOR_PIN, INPUT_PULLUP);
   probe.attach(PROBE_PIN);
@@ -25,24 +33,29 @@ void loop() {
   while (Serial.available() > 0) {
     incomingByte = Serial.read();
   }
-  if (incomingByte & START_DETECTING) {
-    started = true;
-    Serial.write(started);
-  }
-  if (incomingByte & ENABLE_PROBE) {
-    probe.write(PROBE_OUTWARD);
-    detected = false;
-  }
-  if (incomingByte & SYNCED) {
+
+  if (incomingByte & HEARTBEAT) {
+    Serial.write(SUCCES);
   }
 
-  if (started) {
-    if (!detected) {
-      detected = digitalRead(TOUCH_SENSOR_PIN);
-      if (detected) {
-        probe.write(PROBE_INWARD);
-      }
+  if (incomingByte & START_DETECTING) {
+    probe.write(PROBE_OUTWARD);
+    detected = false;
+    detecting = true;
+
+    Serial.write(SUCCES);
+  }
+
+  if (incomingByte & REQUEST_OBJECT_DETECTED) {
+    Serial.write(detected ? OBJECT_DETECTED : OBJECT_NOT_DETECTED);
+    digitalWrite(13, HIGH);
+  }
+
+  if (detecting) {
+    if (digitalRead(TOUCH_SENSOR_PIN)) {
+      probe.write(PROBE_INWARD);
+      detected = true;
+      detecting = false;
     }
-    Serial.write(detected);
   }
 }

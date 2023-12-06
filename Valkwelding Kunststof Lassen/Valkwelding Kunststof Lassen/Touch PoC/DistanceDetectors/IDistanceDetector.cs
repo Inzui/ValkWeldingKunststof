@@ -1,11 +1,11 @@
-﻿namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
+﻿using ValkWelding.Welding.Touch_PoC.Types;
+
+namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
 {
     public interface IDistanceDetector
     {
         bool Connected { get; }
-        bool ObjectDetected { get; }
-
+        DetectorResponse SendCommand(DetectorCommand command);
         void Start();
-        void EnableProbe();
     }
 }

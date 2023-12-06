@@ -85,11 +85,6 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
         public IEnumerable<CobotPosition> Detect(IEnumerable<CobotPosition> measurePoints)
         {
-            if (!_distanceDetector.Connected)
-            {
-                _distanceDetector.Start();
-            }
-
             List<CobotPosition> newMeasurePositions = GeneratePointsBetween(measurePoints);
             foreach (CobotPosition measurePosition in newMeasurePositions)
             {
@@ -97,20 +92,23 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                 CobotPosition returnPosition = measurePosition.Copy();
                 _cobotController.MoveToDirect(measurePosition);
 
-                if (!_distanceDetector.ObjectDetected)
+                _distanceDetector.SendCommand(DetectorCommand.StartDetecting);
+                if (_distanceDetector.SendCommand(DetectorCommand.RequestObjectDetected) == DetectorResponse.ObjectNotDetected)
                 {
                     // Move forward in bigger steps until an object has been detected.
-                    _distanceDetector.EnableProbe();
-                    while (!_distanceDetector.ObjectDetected)
+                    _distanceDetector.SendCommand(DetectorCommand.StartDetecting);
+                    while (_distanceDetector.SendCommand(DetectorCommand.RequestObjectDetected) == DetectorResponse.ObjectNotDetected)
                     {
                         _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Forward);
                     }
-                    _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Backward);
+
+                    // Move a step back.
+                    _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Backward, 3);
 
                     // Move forward in small steps until the object is detected again.
                     _cobotController.StepSize = _preciseStepSize;
-                    _distanceDetector.EnableProbe();
-                    while (!_distanceDetector.ObjectDetected)
+                    _distanceDetector.SendCommand(DetectorCommand.StartDetecting);
+                    while (_distanceDetector.SendCommand(DetectorCommand.RequestObjectDetected) == DetectorResponse.ObjectNotDetected)
                     {
                         _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Forward);
                     }
