@@ -1,42 +1,58 @@
-#define TOUCH_SENSOR_PIN 2
-#define START_DETECTING 0x01
-#define RECEIVED 0x04
-#include <Servo.h>
+#include <Servo.h> 
 
-Servo myservo;
-bool started = false;
+#define TOUCH_SENSOR_PIN 2
+#define PROBE_PIN 9
+#define PROBE_INWARD 90
+#define PROBE_OUTWARD 10
+
+// Incoming commands
+#define HEARTBEAT 0x01
+#define START_DETECTING 0x02
+#define REQUEST_OBJECT_DETECTED 0x04
+
+// Outgoing commands
+#define SUCCES 0x1
+#define OBJECT_DETECTED 0x2
+#define OBJECT_NOT_DETECTED 0x4
+
+Servo probe;
+bool detecting = false;
 bool detected = false;
 
 void setup() {
   Serial.begin(115200);
-  myservo.attach(9);
   pinMode(TOUCH_SENSOR_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(TOUCH_SENSOR_PIN), detect, RISING);
-}
-
-void loop() {
+  probe.attach(PROBE_PIN);
+  probe.write(PROBE_INWARD);
+} 
+ 
+void loop() { 
   int incomingByte = 0x00;
   while (Serial.available() > 0) {
     incomingByte = Serial.read();
   }
+
+  if (incomingByte & HEARTBEAT) {
+    Serial.write(SUCCES);
+  }
+
   if (incomingByte & START_DETECTING) {
-    started = true;
-    Serial.write(started);
-  }
-  if (incomingByte & RECEIVED) {
+    probe.write(PROBE_OUTWARD);
+    detected = false;
+    detecting = true;
+
+    Serial.write(SUCCES);
   }
 
-  if (started) {
-    // HIER SCHRIJVEN
-    myservo.write(10);
-    if (detected) {
-      myservo.write(90);
-      detected = false;
+  if (incomingByte & REQUEST_OBJECT_DETECTED) {
+    Serial.write(detected ? OBJECT_DETECTED : OBJECT_NOT_DETECTED);
+  }
+
+  if (detecting) {
+    if (digitalRead(TOUCH_SENSOR_PIN)) {
+      probe.write(PROBE_INWARD);
+      detected = true;
+      detecting = false;
     }
-    Serial.write(!digitalRead(TOUCH_SENSOR_PIN));
   }
-}
-
-void detect() {
-  detected = true;
 }

@@ -95,21 +95,23 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                 CobotPosition returnPosition = measurePosition.Copy();
                 _cobotController.MoveToDirect(measurePosition);
 
-                if (!_distanceDetector.ObjectDetected)
+                _distanceDetector.SendCommand(DetectorCommand.StartDetecting);
+                if (_distanceDetector.SendCommand(DetectorCommand.RequestObjectDetected) == DetectorResponse.ObjectNotDetected)
                 {
                     // Move forward in bigger steps until an object has been detected.
-                    while (!_distanceDetector.ObjectDetected)
+                    _distanceDetector.SendCommand(DetectorCommand.StartDetecting);
+                    while (_distanceDetector.SendCommand(DetectorCommand.RequestObjectDetected) == DetectorResponse.ObjectNotDetected)
                     {
                         _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Forward);
                     }
-                    // Move backward in bigger steps until the object is no longer detected.
-                    while (_distanceDetector.ObjectDetected)
-                    {
-                        _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Backward);
-                    }
+
+                    // Move a step back.
+                    _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Backward, 3);
+
                     // Move forward in small steps until the object is detected again.
                     _cobotController.StepSize = _preciseStepSize;
-                    while (!_distanceDetector.ObjectDetected)
+                    _distanceDetector.SendCommand(DetectorCommand.StartDetecting);
+                    while (_distanceDetector.SendCommand(DetectorCommand.RequestObjectDetected) == DetectorResponse.ObjectNotDetected)
                     {
                         _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Forward);
                     }

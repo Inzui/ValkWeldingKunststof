@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace ValkWelding.Welding.Touch_PoC.Types
 {
-    public enum DetectorCommand : byte
+    public enum DetectorResponse
     {
-        Unknown = 0x0,
-        Heartbeat = 0x01,
-        StartDetecting = 0x02,
-        RequestObjectDetected = 0x04
+        UNKNOWN = 0x0,
+        Succes = 0x1,
+        ObjectDetected = 0x2,
+        ObjectNotDetected = 0x4
     }
 }

@@ -81,19 +81,23 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             Debug.WriteLine("");
         }
 
-        public void MoveStepToObject(CobotPosition startingPosition, MovementDirection direction)
+        public void MoveStepToObject(CobotPosition startingPosition, MovementDirection direction, int noOfSteps = 1)
         {
             CobotPosition nextPosition;
-            if (direction == MovementDirection.Forward)
+            for(int i = 0; i < noOfSteps; i++)
             {
-                nextPosition = GetForwardMovementPosition(startingPosition);
-            }
-            else
-            {
-                nextPosition = GetBackwardMovementPosition(startingPosition);
-            }
+                if (direction == MovementDirection.Forward)
+                {
+                    nextPosition = GetForwardMovementPosition(startingPosition);
+                }
+                else
+                {
+                    nextPosition = GetBackwardMovementPosition(startingPosition);
+                }
 
-            MoveToDirect(nextPosition);
+                MoveToDirect(nextPosition);
+                startingPosition = nextPosition;
+            }
         }
 
         public CobotPosition GetForwardMovementPosition(CobotPosition startingPosition)
