@@ -95,35 +95,38 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                 CobotPosition returnPosition = measurePosition.Copy();
                 _cobotController.MoveToDirect(measurePosition);
 
-                _distanceDetector.SendCommand(DetectorCommand.StartDetecting);
-                if (_distanceDetector.SendCommand(DetectorCommand.RequestObjectDetected) == DetectorResponse.ObjectNotDetected)
+                if (measurePosition.PointType != PointTypeDefinition.Dummy)
                 {
-                    // Move forward in bigger steps until an object has been detected.
                     _distanceDetector.SendCommand(DetectorCommand.StartDetecting);
-                    while (_distanceDetector.SendCommand(DetectorCommand.RequestObjectDetected) == DetectorResponse.ObjectNotDetected)
+                    if (_distanceDetector.SendCommand(DetectorCommand.RequestObjectDetected) == DetectorResponse.ObjectNotDetected)
                     {
-                        _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Forward);
+                        // Move forward in bigger steps until an object has been detected.
+                        _distanceDetector.SendCommand(DetectorCommand.StartDetecting);
+                        while (_distanceDetector.SendCommand(DetectorCommand.RequestObjectDetected) == DetectorResponse.ObjectNotDetected)
+                        {
+                            _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Forward);
+                        }
+
+                        // Move a step back.
+                        _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Backward, 3);
+
+                        // Move forward in small steps until the object is detected again.
+                        _cobotController.StepSize = _preciseStepSize;
+                        _distanceDetector.SendCommand(DetectorCommand.StartDetecting);
+                        while (_distanceDetector.SendCommand(DetectorCommand.RequestObjectDetected) == DetectorResponse.ObjectNotDetected)
+                        {
+                            _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Forward);
+                        }
+
+                        CobotPosition objectPosition = _cobotController.GetCobotPosition();
+                        measurePosition.X = objectPosition.X;
+                        measurePosition.Y = objectPosition.Y;
+                        measurePosition.Z = objectPosition.Z;
+                        measurePosition.Pitch = objectPosition.Pitch;
+                        measurePosition.Roll = objectPosition.Roll;
+                        measurePosition.Yaw = objectPosition.Yaw;
+                        _cobotController.MoveToDirect(returnPosition);
                     }
-
-                    // Move a step back.
-                    _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Backward, 3);
-
-                    // Move forward in small steps until the object is detected again.
-                    _cobotController.StepSize = _preciseStepSize;
-                    _distanceDetector.SendCommand(DetectorCommand.StartDetecting);
-                    while (_distanceDetector.SendCommand(DetectorCommand.RequestObjectDetected) == DetectorResponse.ObjectNotDetected)
-                    {
-                        _cobotController.MoveStepToObject(_cobotController.GetCobotPosition(), MovementDirection.Forward);
-                    }
-
-                    CobotPosition objectPosition = _cobotController.GetCobotPosition();
-                    measurePosition.X = objectPosition.X;
-                    measurePosition.Y = objectPosition.Y;
-                    measurePosition.Z = objectPosition.Z;
-                    measurePosition.Pitch = objectPosition.Pitch;
-                    measurePosition.Roll = objectPosition.Roll;
-                    measurePosition.Yaw = objectPosition.Yaw;
-                    _cobotController.MoveToDirect(returnPosition);
                 }
             }
             return newMeasurePositions;
@@ -134,9 +137,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             float calibratedYawPositionOne = 360 - positionOne.Yaw;
             float calibratedYawPositionTwo = 360 - positionTwo.Yaw;
 
-            Debug.WriteLine($"{calibratedYawPositionOne}, {calibratedYawPositionTwo}");
-
-            if((calibratedYawPositionOne % 90) == 0)
+            if ((calibratedYawPositionOne % 90) == 0)
             {
                 calibratedYawPositionOne += 0.1f;
             }
@@ -170,6 +171,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             //Calculate new Yaw by taking average of old two yaw positions
             //Check if this works with the yaw positioning (taking 360 degrees into account)
             cornerPosition.Yaw = (positionOne.Yaw + positionTwo.Yaw) / 2;
+            cornerPosition.PointType = PointTypeDefinition.Dummy;
 
             return cornerPosition;
         }

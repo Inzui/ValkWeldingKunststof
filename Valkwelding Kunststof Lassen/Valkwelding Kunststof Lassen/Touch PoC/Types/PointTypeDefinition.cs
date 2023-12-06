@@ -9,6 +9,7 @@ namespace ValkWelding.Welding.Touch_PoC.Types
     public enum PointTypeDefinition
     {
         Line,
-        Corner
+        Corner,
+        Dummy
     }
 }

@@ -65,11 +65,11 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
             }
             catch (IOException) 
             {
-                _settingsViewModel.MessageBoxText = "Import failed: file already opened by other process";
+                _settingsViewModel.MessageBoxText = "Import Failed: file already opened by other process";
             }
             catch
             {
-                _settingsViewModel.MessageBoxText = "Import failed";
+                _settingsViewModel.MessageBoxText = "Import Failed";
             }
         }
         
@@ -79,15 +79,15 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
             {
                 _settingsViewModel.MessageBoxText = "Exporting Point List...";
                 _diskManagementService.ExportPositions(ViewModel.ToMeasurePositions);
-                _settingsViewModel.MessageBoxText = "Export succes";
+                _settingsViewModel.MessageBoxText = "Export Success";
             }
             catch (IOException)
             {
-                _settingsViewModel.MessageBoxText = "Export failed: file already opened by other process";
+                _settingsViewModel.MessageBoxText = "Export Failed: file already opened by other process";
             }
             catch
             {
-                _settingsViewModel.MessageBoxText = "Export failed";
+                _settingsViewModel.MessageBoxText = "Export Failed";
             }
         }
         
@@ -110,14 +110,14 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
                             _pathPlanningService.ReturnToStartPos(measuredPositions);
                         });
 
-                        _settingsViewModel.MessageBoxText = "Running measurements...";
+                        _settingsViewModel.MessageBoxText = "Running Measurements...";
                         await Task.Run(() =>
                         {
                             measuredPositions = new(_pathPlanningService.Detect(measuredPositions));
                         });
                         ViewModel.MeasuredPositions = measuredPositions;
                         _settingsViewModel.StartButtonEnabled = true;
-                        _settingsViewModel.MessageBoxText = "Measurements done";
+                        _settingsViewModel.MessageBoxText = "Measurements Done";
                     }
                     else
                     {
