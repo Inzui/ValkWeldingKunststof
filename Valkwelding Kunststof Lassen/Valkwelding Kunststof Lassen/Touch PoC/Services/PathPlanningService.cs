@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Media.Imaging;
 using ValkWelding.Welding.Touch_PoC.Configuration;
 using ValkWelding.Welding.Touch_PoC.DistanceDetectors;
 using ValkWelding.Welding.Touch_PoC.HelperObjects;
@@ -74,7 +75,9 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         public void ReturnToStartPos(IEnumerable<CobotPosition> cobotPositions)
         {
             _cobotController.StepSize = _roughStepSize;
-            IEnumerable<CobotPosition> reversedPositions = cobotPositions.Reverse();
+            IEnumerable<CobotPosition> fullCobotPositions = GeneratePointsBetween(cobotPositions);
+            IEnumerable<CobotPosition> reversedPositions = fullCobotPositions.Reverse();
+
             foreach (CobotPosition cobotPosition in reversedPositions)
             {
                 _cobotController.MoveToDirect(cobotPosition);
@@ -126,21 +129,34 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 #warning Need to check if Yaw is 0 degrees when pointing forwards
         private CobotPosition GetCornerPosition(CobotPosition positionOne, CobotPosition positionTwo)
         {
+            float calibratedYawPositionOne = 360 - positionOne.Yaw;
+            float calibratedYawPositionTwo = 360 - positionTwo.Yaw;
+
+            if(calibratedYawPositionOne == 90 || calibratedYawPositionOne == 270)
+            {
+                calibratedYawPositionOne += 0.1f;
+            }
+
+            if (calibratedYawPositionTwo == 90 || calibratedYawPositionTwo == 270)
+            {
+                calibratedYawPositionTwo += 0.1f;
+            }
+
             //Convert the Yaw degrees into a slope
-            double slopeOne = Math.Tan((double)((-positionOne.Yaw + 90) * Math.PI / 180.0)); 
-            double slopeTwo = Math.Tan((double)((-positionTwo.Yaw + 90) * Math.PI / 180.0));
+            double slopeOne = Math.Tan((double)((calibratedYawPositionOne) * Math.PI / 180.0)); 
+            double slopeTwo = Math.Tan((double)((calibratedYawPositionTwo) * Math.PI / 180.0));
 
             //Convert old slope into new perpendicular slope
-            double perpSlopeOne = -1 / slopeOne;
-            double perpSlopeTwo = -1 / slopeTwo;
+            //double perpSlopeOne = slopeOne;
+            //double perpSlopeTwo = slopeTwo;
 
             //Calculate b value for perpendicular line
-            double perpBOne = positionOne.Y - perpSlopeOne * positionOne.X;
-            double perpBTwo = positionTwo.Y - perpSlopeTwo * positionTwo.X;
+            double perpBOne = positionOne.Y - slopeOne * positionOne.X;
+            double perpBTwo = positionTwo.Y - slopeTwo * positionTwo.X;
 
             //Calcualte Intersion points between two perpendicular lines
-            double xIntersection = (perpBTwo - perpBOne) / (perpSlopeOne - perpSlopeTwo);
-            double yIntersection = (perpSlopeOne * xIntersection) + perpBOne;
+            double xIntersection = (perpBTwo - perpBOne) / (slopeOne - slopeTwo);
+            double yIntersection = (slopeOne * xIntersection) + perpBOne;
 
             //Create new position where the two perpendicular lines meet
             CobotPosition cornerPosition = positionOne.Copy();
@@ -162,27 +178,35 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                 CobotPosition previousPos = measurePoints.ElementAt(i - 1);
                 CobotPosition currPos = measurePoints.ElementAt(i);
 
-                if (currPos.PointsToGenerateBetweenLast > 0)
+                if(currPos.PointType == PointTypeDefinition.Line)
                 {
-                    float distributionX = (currPos.X - previousPos.X) / currPos.PointsToGenerateBetweenLast;
-                    float distributionY = (currPos.Y - previousPos.Y) / currPos.PointsToGenerateBetweenLast;
-                    float distributionZ = (currPos.Z - previousPos.Z) / currPos.PointsToGenerateBetweenLast;
-                    float distributionJaw = (currPos.Yaw - previousPos.Yaw) / currPos.PointsToGenerateBetweenLast;
-
-                    for (int j = 0; j < currPos.PointsToGenerateBetweenLast - 1; j++)
+                    if (currPos.PointsToGenerateBetweenLast > 0)
                     {
-                        generatedPoints.Add(new CobotPosition()
+                        float distributionX = (currPos.X - previousPos.X) / currPos.PointsToGenerateBetweenLast;
+                        float distributionY = (currPos.Y - previousPos.Y) / currPos.PointsToGenerateBetweenLast;
+                        float distributionZ = (currPos.Z - previousPos.Z) / currPos.PointsToGenerateBetweenLast;
+                        float distributionJaw = (currPos.Yaw - previousPos.Yaw) / currPos.PointsToGenerateBetweenLast;
+
+                        for (int j = 0; j < currPos.PointsToGenerateBetweenLast - 1; j++)
                         {
-                            X = generatedPoints.Last().X + distributionX,
-                            Y = generatedPoints.Last().Y + distributionY,
-                            Z = generatedPoints.Last().Z + distributionZ,
-                            Yaw = generatedPoints.Last().Yaw + distributionJaw,
-                            Pitch = currPos.Pitch,
-                            Roll = currPos.Roll,
-                            PointsToGenerateBetweenLast = 0
-                        });
+                            generatedPoints.Add(new CobotPosition()
+                            {
+                                X = generatedPoints.Last().X + distributionX,
+                                Y = generatedPoints.Last().Y + distributionY,
+                                Z = generatedPoints.Last().Z + distributionZ,
+                                Yaw = generatedPoints.Last().Yaw + distributionJaw,
+                                Pitch = currPos.Pitch,
+                                Roll = currPos.Roll,
+                                PointsToGenerateBetweenLast = 0
+                            });
+                        }
                     }
                 }
+                else if(currPos.PointType == PointTypeDefinition.Corner)
+                {
+                    generatedPoints.Add(GetCornerPosition(previousPos, currPos));
+                }
+
                 generatedPoints.Add(currPos);
             }
 
