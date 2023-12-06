@@ -14,12 +14,13 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="5*"/>
+            <RowDefinition Height="4.5*"/>
             <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
 
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="0.75*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -29,20 +30,33 @@
             </Grid.ColumnDefinitions>
             <TextBlock Style="{StaticResource HeaderText}"
                         Grid.ColumnSpan="2"
-                        Text="Point List Controls"
-                        Margin="5"/>
+                        Text="Point List Controls"/>
             <Button Style="{StaticResource ConnectButton}"
-                    Margin="10,5"
+                    Margin="10,2"
                     Content="Add"
                     Grid.Row="1"
                     Click="Add_Button_Click"
                     IsEnabled="{Binding ButtonsEnabled}"/>
             <Button Style="{StaticResource ConnectButton}"
-                    Margin="10,5"
+                    Margin="10,2"
                     Content="Remove"
                     Grid.Row="1"
                     Grid.Column="1"
                     Click="Remove_Button_Click"
+                    IsEnabled="{Binding ButtonsEnabled}"/>
+
+            <Button Style="{StaticResource ConnectButton}"
+                    Margin="10,2"
+                    Content="Import"
+                    Grid.Row="2"
+                    Click="Import_Button_Click"
+                    IsEnabled="{Binding ButtonsEnabled}"/>
+            <Button Style="{StaticResource ConnectButton}"
+                    Margin="10,2"
+                    Content="Export"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Click="Export_Button_Click"
                     IsEnabled="{Binding ButtonsEnabled}"/>
         </Grid>
 

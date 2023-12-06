@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,7 +31,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
         private readonly SettingsViewModel _settingsViewModel;
         private readonly IPathPlanningService _pathPlanningService;
         private readonly ICobotConnectionService _cobotConnectionService;
-        private readonly ICobotControllerService _cobotControllerService;
+        private readonly IDiskManagementService _diskManagementService;
 
         public PointListControl()
         {
@@ -37,7 +39,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
             _settingsViewModel = App.GetService<SettingsViewModel>();
             _pathPlanningService = App.GetService<IPathPlanningService>();
             _cobotConnectionService = App.GetService<ICobotConnectionService>();
-            _cobotControllerService = App.GetService<ICobotControllerService>();
+            _diskManagementService = App.GetService<IDiskManagementService>();
 
             InitializeComponent();
         }
@@ -53,6 +55,41 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
         {
             ViewModel.RemovePositionFromList(ViewModel.SelectedPosition);
         } 
+
+        private void Import_Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                _settingsViewModel.MessageBoxText = "Importing Point List...";
+                ViewModel.ToMeasurePositions = new ObservableCollection<CobotPosition>(_diskManagementService.ImportPositions());
+            }
+            catch (IOException) 
+            {
+                _settingsViewModel.MessageBoxText = "Import failed: file already opened by other process";
+            }
+            catch
+            {
+                _settingsViewModel.MessageBoxText = "Import failed";
+            }
+        }
+        
+        private void Export_Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                _settingsViewModel.MessageBoxText = "Exporting Point List...";
+                _diskManagementService.ExportPositions(ViewModel.ToMeasurePositions);
+                _settingsViewModel.MessageBoxText = "Export succes";
+            }
+            catch (IOException)
+            {
+                _settingsViewModel.MessageBoxText = "Export failed: file already opened by other process";
+            }
+            catch
+            {
+                _settingsViewModel.MessageBoxText = "Export failed";
+            }
+        }
         
         private async void Start_Button_Click(object sender, RoutedEventArgs e)
         {
