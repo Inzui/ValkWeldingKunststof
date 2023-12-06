@@ -128,7 +128,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             }
             return newMeasurePositions;
         }
-#warning Need to check if Yaw is 0 degrees when pointing forwards
+
         private CobotPosition GetCornerPosition(CobotPosition positionOne, CobotPosition positionTwo)
         {
             float calibratedYawPositionOne = 360 - positionOne.Yaw;
