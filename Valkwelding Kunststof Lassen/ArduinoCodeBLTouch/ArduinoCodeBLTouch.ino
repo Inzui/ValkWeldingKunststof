@@ -19,9 +19,7 @@ Servo probe;
 bool detecting = false;
 bool detected = false;
 
-void setup() { 
-  pinMode(13, OUTPUT);
-
+void setup() {
   Serial.begin(115200);
   pinMode(TOUCH_SENSOR_PIN, INPUT_PULLUP);
   probe.attach(PROBE_PIN);
@@ -48,7 +46,6 @@ void loop() {
 
   if (incomingByte & REQUEST_OBJECT_DETECTED) {
     Serial.write(detected ? OBJECT_DETECTED : OBJECT_NOT_DETECTED);
-    digitalWrite(13, HIGH);
   }
 
   if (detecting) {
