@@ -134,19 +134,21 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             float calibratedYawPositionOne = 360 - positionOne.Yaw;
             float calibratedYawPositionTwo = 360 - positionTwo.Yaw;
 
-            if(calibratedYawPositionOne == 90 || calibratedYawPositionOne == 270)
+            Debug.WriteLine($"{calibratedYawPositionOne}, {calibratedYawPositionTwo}");
+
+            if((calibratedYawPositionOne % 90) == 0)
             {
                 calibratedYawPositionOne += 0.1f;
             }
 
-            if (calibratedYawPositionTwo == 90 || calibratedYawPositionTwo == 270)
+            if ((calibratedYawPositionTwo % 90) == 0)
             {
                 calibratedYawPositionTwo += 0.1f;
             }
 
             //Convert the Yaw degrees into a slope
-            double slopeOne = Math.Tan((double)((calibratedYawPositionOne) * Math.PI / 180.0)); 
-            double slopeTwo = Math.Tan((double)((calibratedYawPositionTwo) * Math.PI / 180.0));
+            double slopeOne = Math.Tan((double)((-calibratedYawPositionOne) * Math.PI / 180.0)); 
+            double slopeTwo = Math.Tan((double)((-calibratedYawPositionTwo) * Math.PI / 180.0));
 
             //Convert old slope into new perpendicular slope
             //double perpSlopeOne = slopeOne;
