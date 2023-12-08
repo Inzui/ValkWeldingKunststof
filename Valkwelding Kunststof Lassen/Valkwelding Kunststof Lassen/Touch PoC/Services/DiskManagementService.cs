@@ -9,7 +9,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using ValkWelding.Welding.Touch_PoC.HelperObjects;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
@@ -19,24 +21,28 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         private readonly SaveFileDialog _saveFileDialog;
         private readonly OpenFileDialog _openFileDialog;
         private readonly CsvConfiguration _csvConfig;
-
+        private readonly string _filePath;
+        JsonSerializerOptions _jsonOptions;
 
         public DiskManagementService()
         {
+            _filePath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Valk Welding", "PolyTouch", "Settings.json");
+            _jsonOptions = new() { 
+                WriteIndented = true 
+            };
+
             _saveFileDialog = new()
             {
                 FileName = "Export",
                 DefaultExt = ".csv",
                 Filter = "CSV files (*.csv)|*.csv"
             };
-            
             _openFileDialog = new()
             {
                 FileName = "Export",
                 DefaultExt = ".csv",
                 Filter = "CSV files (*.csv)|*.csv"
             };
-
             _csvConfig = new(CultureInfo.InvariantCulture)
             {
                 Delimiter = ";",
@@ -79,6 +85,38 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             }
 
             return positions;
+        }
+
+        public void WriteSettings(SettingsModel settingsModel)
+        {
+            string jsonString = JsonSerializer.Serialize(settingsModel, _jsonOptions);
+            try
+            {
+                string directory = Path.GetDirectoryName(_filePath);
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+                File.WriteAllText(_filePath, jsonString);
+            }
+            catch { }
+        }
+
+        public SettingsModel LoadSettings()
+        {
+            if (File.Exists(_filePath))
+            {
+                try
+                {
+                    string contents = File.ReadAllText(_filePath);
+                    return JsonSerializer.Deserialize<SettingsModel>(contents, _jsonOptions);
+                }
+                catch
+                {
+                    return new SettingsModel();
+                }
+            }
+            return new SettingsModel();
         }
     }
 }

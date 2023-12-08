@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -34,6 +35,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
         private readonly ICobotConnectionService _cobotConnectionService;
         private readonly ICobotControllerService _cobotControllerService;
         private readonly IDistanceDetector _distanceDetector;
+        private readonly IDiskManagementService _diskManagementService;
 
         public SettingsControl()
         {
@@ -43,15 +45,27 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
             _cobotConnectionService = App.GetService<ICobotConnectionService>();
             _cobotControllerService = App.GetService<ICobotControllerService>();
             _distanceDetector = App.GetService<IDistanceDetector>();
+            _diskManagementService = App.GetService<IDiskManagementService>();
 
             InitializeComponent();
+            Loaded += (s, e) =>
+            { // only at this point the control is ready
+                Window.GetWindow(this) // get the parent window
+                      .Closing += (s1, e1) => Stop(); //disposing logic here
+            };
             Start();
         }
 
         public void Start()
         {
             ViewModel.AvailableComPorts = new(SerialPort.GetPortNames());
+            ViewModel.SettingsModel = _diskManagementService.LoadSettings();
             ViewModel.SettingsModel.SelectedComPort = ViewModel.AvailableComPorts.FirstOrDefault();
+        }
+
+        protected  void Stop()
+        {
+            _diskManagementService.WriteSettings(ViewModel.SettingsModel);
         }
 
         private async void Start_Button_Click(object sender, RoutedEventArgs e)
@@ -74,6 +88,8 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
                     {
                         _cobotControllerService.StartMillSequence(_pointListViewModel.MeasuredPositions);
                     });
+
+                    ViewModel.MessageBoxText = "Milling Done";
                 }
                 else
                 {

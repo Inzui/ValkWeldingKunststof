@@ -22,7 +22,6 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
         public SettingsViewModel(ICobotConnectionService cobotConnectionService)
         {
             CobotConnectionService = cobotConnectionService;
-            _settingsModel = new();
 
             _currentCobotPosition = new()
             {

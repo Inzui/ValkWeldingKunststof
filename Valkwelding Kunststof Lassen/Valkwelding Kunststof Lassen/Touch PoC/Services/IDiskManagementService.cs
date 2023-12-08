@@ -7,5 +7,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
     {
         void ExportPositions(IEnumerable<CobotPosition> positions);
         IEnumerable<CobotPosition> ImportPositions();
+        void WriteSettings(SettingsModel settingsModel);
+        SettingsModel LoadSettings();
     }
 }
