@@ -49,9 +49,8 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
 
             InitializeComponent();
             Loaded += (s, e) =>
-            { // only at this point the control is ready
-                Window.GetWindow(this) // get the parent window
-                      .Closing += (s1, e1) => Stop(); //disposing logic here
+            {
+                Window.GetWindow(this).Closing += (s1, e1) => Stop();
             };
             Start();
         }
