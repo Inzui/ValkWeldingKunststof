@@ -136,5 +136,18 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
                 ViewModel.ConnectButtonEnabled = true;
             }
         }
+
+        private void Probe_Extrude_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (_distanceDetector.Connected)
+            {
+                ViewModel.MessageBoxText = "Extruding Probe...";
+                _distanceDetector.SendCommand(Types.DetectorCommand.StartDetecting);
+            }
+            else
+            {
+                ViewModel.MessageBoxText = "Sensor Not Connected";
+            }
+        }
     }
 }

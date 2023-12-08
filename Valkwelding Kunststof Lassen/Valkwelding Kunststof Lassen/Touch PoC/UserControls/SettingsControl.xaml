@@ -123,6 +123,14 @@
                             Content="Connect"
                             Click="Connect_Sensor_Button_Click"
                             IsEnabled="{Binding ConnectButtonEnabled}"/>
+
+                    <TextBlock Style="{StaticResource SubText}"
+                               Margin="0,10,0,0"
+                               Text="Probe"/>
+                    <Button Style="{StaticResource ConnectButton}"
+                            Content="Extrude"
+                            Click="Probe_Extrude_Button_Click"
+                            IsEnabled="{Binding ConnectButtonEnabled}"/>
                 </StackPanel>
             </Grid>
             </Border>
