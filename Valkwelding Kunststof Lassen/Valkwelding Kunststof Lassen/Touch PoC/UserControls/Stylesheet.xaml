@@ -59,8 +59,10 @@
     </Style>
     
     <!--ComboBox-->
-    <Style x:Key="PointListGridComboBox" TargetType="ComboBox">
-        <Setter Property="Background" Value="Black"/>
-        <Setter Property="FontWeight" Value="Bold"/>
+    <Style x:Key="SettingsComboBox" TargetType="ComboBox">
+        <Setter Property="Margin" Value="25,5, 25, 0"/>
+        <Setter Property="Background" Value="#FF313131"/>
+        <Setter Property="Foreground" Value="#FF313131"/>
+        <Setter Property="BorderBrush" Value="#FF313131"/>
     </Style>
 </ResourceDictionary>

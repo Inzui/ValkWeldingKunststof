@@ -78,7 +78,8 @@
                 <DataGridTemplateColumn Header="Type" Width="1.5*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox Style="{StaticResource PointListGridComboBox}"
+                            <ComboBox Style="{StaticResource SettingsComboBox}"
+                                      Margin="0"
                                       ItemsSource="{Binding PointTypeDefinitionValues}"
                                       SelectedItem="{Binding PointType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>

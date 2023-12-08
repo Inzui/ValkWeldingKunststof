@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using ValkWelding.Welding.Touch_PoC.Configuration;
@@ -12,6 +13,8 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         public ICobotConnectionService CobotConnectionService { get; private set; }
 
+        private ObservableCollection<string> _availableComPorts;
+        private string _selectedComPort;
         private CobotPosition _currentCobotPosition;
         private string _messageBox;
         private string _cobotIpAddress;
@@ -34,6 +37,38 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        public ObservableCollection<string> AvailableComPorts
+        {
+            get
+            {
+                return _availableComPorts;
+            }
+            set
+            {
+                if (value != _availableComPorts)
+                {
+                    _availableComPorts = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        
+        public string SelectedComPort
+        {
+            get
+            {
+                return _selectedComPort;
+            }
+            set
+            {
+                if (value != _selectedComPort)
+                {
+                    _selectedComPort = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public CobotPosition CurrentCobotPosition

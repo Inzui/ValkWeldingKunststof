@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,27 +42,13 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
             _cobotControllerService = App.GetService<ICobotControllerService>();
 
             InitializeComponent();
+            Start();
         }
 
-        private async void Connect_Button_Click(object sender, RoutedEventArgs e)
+        public void Start()
         {
-            try
-            {
-                ViewModel.MessageBoxText = "Connecting...";
-                ViewModel.ConnectButtonEnabled = false;
-                await ViewModel.CobotConnectionService.CheckConnection(ViewModel.CobotIpAddress);
-                _cobotControllerService.StopMill();
-                ViewModel.MessageBoxText = "Connected";
-            }
-            catch (Exception ex)
-            {
-                ViewModel.MessageBoxText = ex.Message;
-                Debug.WriteLine(ex);
-            }
-            finally
-            {
-                ViewModel.ConnectButtonEnabled = true;
-            }
+            ViewModel.AvailableComPorts = new(SerialPort.GetPortNames());
+            ViewModel.SelectedComPort = ViewModel.AvailableComPorts.FirstOrDefault();
         }
 
         private async void Start_Button_Click(object sender, RoutedEventArgs e)
@@ -77,7 +65,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
                     {
                         _pathPlanningService.ReturnToStartPos(_pointListViewModel.MeasuredPositions);
                     });
-                    
+
                     ViewModel.MessageBoxText = "Milling...";
                     await Task.Run(() =>
                     {
@@ -97,6 +85,47 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
             {
                 ViewModel.StartButtonEnabled = true;
                 _pointListViewModel.ButtonsEnabled = true;
+            }
+        }
+
+        private async void Connect_Cobot_Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.MessageBoxText = "Connecting Cobot...";
+                ViewModel.ConnectButtonEnabled = false;
+                await ViewModel.CobotConnectionService.CheckConnection(ViewModel.CobotIpAddress);
+                _cobotControllerService.StopMill();
+                ViewModel.MessageBoxText = "Connected";
+            }
+            catch (Exception ex)
+            {
+                ViewModel.MessageBoxText = ex.Message;
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                ViewModel.ConnectButtonEnabled = true;
+            }
+        }
+
+        private void Connect_Sensor_Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.MessageBoxText = "Connecting Sensor...";
+                ViewModel.ConnectButtonEnabled = false;
+                // TODO
+                ViewModel.MessageBoxText = "Connected";
+            }
+            catch (Exception ex)
+            {
+                ViewModel.MessageBoxText = ex.Message;
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                ViewModel.ConnectButtonEnabled = true;
             }
         }
     }

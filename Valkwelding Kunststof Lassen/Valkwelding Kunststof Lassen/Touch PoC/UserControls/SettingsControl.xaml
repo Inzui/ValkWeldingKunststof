@@ -108,7 +108,20 @@
                              Text="{Binding CobotIpAddress, Mode=TwoWay}"/>
                     <Button Style="{StaticResource ConnectButton}"
                             Content="Connect"
-                            Click="Connect_Button_Click"
+                            Click="Connect_Cobot_Button_Click"
+                            IsEnabled="{Binding ConnectButtonEnabled}"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,20"
+                            Grid.Column="1">
+                    <TextBlock Style="{StaticResource SubText}"
+                               Text="Touch Sensor COM Port"/>
+                    <ComboBox Style="{StaticResource SettingsComboBox}"
+                              ItemsSource="{Binding AvailableComPorts}"
+                              SelectedItem="{Binding SelectedComPort}"/>
+                    <Button Style="{StaticResource ConnectButton}"
+                            Content="Connect"
+                            Click="Connect_Sensor_Button_Click"
                             IsEnabled="{Binding ConnectButtonEnabled}"/>
                 </StackPanel>
             </Grid>

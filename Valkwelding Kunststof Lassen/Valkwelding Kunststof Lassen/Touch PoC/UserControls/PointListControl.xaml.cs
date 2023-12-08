@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ValkWelding.Welding.Touch_PoC.DistanceDetectors;
 using ValkWelding.Welding.Touch_PoC.HelperObjects;
 using ValkWelding.Welding.Touch_PoC.Services;
 using ValkWelding.Welding.Touch_PoC.ViewModels;
@@ -32,6 +33,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
         private readonly IPathPlanningService _pathPlanningService;
         private readonly ICobotConnectionService _cobotConnectionService;
         private readonly IDiskManagementService _diskManagementService;
+        private readonly IDistanceDetector _distanceDetector;
 
         public PointListControl()
         {
@@ -40,6 +42,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
             _pathPlanningService = App.GetService<IPathPlanningService>();
             _cobotConnectionService = App.GetService<ICobotConnectionService>();
             _diskManagementService = App.GetService<IDiskManagementService>();
+            _distanceDetector = App.GetService<IDistanceDetector>();
 
             InitializeComponent();
         }
@@ -97,32 +100,41 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
             {
                 try
                 {
-                    if (_cobotConnectionService.CobotInRunMode && _cobotConnectionService.CobotConnected)
+                    if (!_cobotConnectionService.CobotConnected)
                     {
-                        _settingsViewModel.StartButtonEnabled = false;
-                        ViewModel.ButtonsEnabled = false;
-                        ViewModel.GridReadOnly = true;
-
-                        _settingsViewModel.MessageBoxText = "Returning to starting position...";
-                        ObservableCollection<CobotPosition> measuredPositions = ViewModel.ToMeasurePositions;
-                        await Task.Run(() =>
-                        {
-                            _pathPlanningService.ReturnToStartPos(measuredPositions);
-                        });
-
-                        _settingsViewModel.MessageBoxText = "Running Measurements...";
-                        await Task.Run(() =>
-                        {
-                            measuredPositions = new(_pathPlanningService.Detect(measuredPositions));
-                        });
-                        ViewModel.MeasuredPositions = measuredPositions;
-                        _settingsViewModel.StartButtonEnabled = true;
-                        _settingsViewModel.MessageBoxText = "Measurements Done";
+                        _settingsViewModel.MessageBoxText = "Cobot not connected";
+                        return;
                     }
-                    else
+                    if (!_cobotConnectionService.CobotInRunMode)
                     {
-                        _settingsViewModel.MessageBoxText = "Cobot not connected or not in Run Mode";
+                        _settingsViewModel.MessageBoxText = "Cobot not in Run Mode";
+                        return;
                     }
+                    if (!_distanceDetector.Connected)
+                    {
+                        _settingsViewModel.MessageBoxText = "Sensor not connected";
+                        return;
+                    }
+
+                    _settingsViewModel.StartButtonEnabled = false;
+                    ViewModel.ButtonsEnabled = false;
+                    ViewModel.GridReadOnly = true;
+
+                    _settingsViewModel.MessageBoxText = "Returning to starting position...";
+                    ObservableCollection<CobotPosition> measuredPositions = ViewModel.ToMeasurePositions;
+                    await Task.Run(() =>
+                    {
+                        _pathPlanningService.ReturnToStartPos(measuredPositions);
+                    });
+
+                    _settingsViewModel.MessageBoxText = "Running Measurements...";
+                    await Task.Run(() =>
+                    {
+                        measuredPositions = new(_pathPlanningService.Detect(measuredPositions));
+                    });
+                    ViewModel.MeasuredPositions = measuredPositions;
+                    _settingsViewModel.StartButtonEnabled = true;
+                    _settingsViewModel.MessageBoxText = "Measurements Done";
                 }
                 catch (Exception ex)
                 {
