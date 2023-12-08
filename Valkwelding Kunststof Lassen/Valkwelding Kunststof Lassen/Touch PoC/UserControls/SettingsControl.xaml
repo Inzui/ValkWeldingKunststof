@@ -105,7 +105,7 @@
                     <TextBlock Style="{StaticResource SubText}"
                                Text="Cobot Ip-Address"/>
                     <TextBox Style="{StaticResource SettingsTextBox}"
-                             Text="{Binding CobotIpAddress, Mode=TwoWay}"/>
+                             Text="{Binding SettingsModel.CobotIpAddress, Mode=TwoWay}"/>
                     <Button Style="{StaticResource ConnectButton}"
                             Content="Connect"
                             Click="Connect_Cobot_Button_Click"
@@ -117,8 +117,8 @@
                     <TextBlock Style="{StaticResource SubText}"
                                Text="Touch Sensor COM Port"/>
                     <ComboBox Style="{StaticResource SettingsComboBox}"
-                              ItemsSource="{Binding AvailableComPorts}"
-                              SelectedItem="{Binding SelectedComPort}"/>
+                              ItemsSource="{Binding AvailableComPorts, Mode=TwoWay}"
+                              SelectedItem="{Binding SettingsModel.SelectedComPort}"/>
                     <Button Style="{StaticResource ConnectButton}"
                             Content="Connect"
                             Click="Connect_Sensor_Button_Click"

@@ -51,7 +51,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
         public void Start()
         {
             ViewModel.AvailableComPorts = new(SerialPort.GetPortNames());
-            ViewModel.SelectedComPort = ViewModel.AvailableComPorts.FirstOrDefault();
+            ViewModel.SettingsModel.SelectedComPort = ViewModel.AvailableComPorts.FirstOrDefault();
         }
 
         private async void Start_Button_Click(object sender, RoutedEventArgs e)
@@ -97,7 +97,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
             {
                 ViewModel.MessageBoxText = "Connecting Cobot...";
                 ViewModel.ConnectButtonEnabled = false;
-                await ViewModel.CobotConnectionService.CheckConnection(ViewModel.CobotIpAddress);
+                await ViewModel.CobotConnectionService.CheckConnection(ViewModel.SettingsModel.CobotIpAddress);
                 _cobotControllerService.StopMill();
                 ViewModel.MessageBoxText = "Connected";
             }
@@ -119,7 +119,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
                 ViewModel.MessageBoxText = "Connecting Sensor...";
                 ViewModel.ConnectButtonEnabled = false;
 
-                string comPort = ViewModel.SelectedComPort;
+                string comPort = ViewModel.SettingsModel.SelectedComPort;
                 await Task.Run(() =>
                 {
                     _distanceDetector.Connect(comPort);

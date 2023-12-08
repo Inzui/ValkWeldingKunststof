@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using ValkWelding.Welding.Touch_PoC.Configuration;
 using ValkWelding.Welding.Touch_PoC.HelperObjects;
 using ValkWelding.Welding.Touch_PoC.Services;
 
@@ -14,17 +13,16 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
         public ICobotConnectionService CobotConnectionService { get; private set; }
 
         private ObservableCollection<string> _availableComPorts;
-        private string _selectedComPort;
+        private SettingsModel _settingsModel;
         private CobotPosition _currentCobotPosition;
         private string _messageBox;
-        private string _cobotIpAddress;
         private bool _connectButtonEnabled;
         private bool _startButtonEnabled;
 
-        public SettingsViewModel(IOptions<LocalConfig> configuration, ICobotConnectionService cobotConnectionService)
+        public SettingsViewModel(ICobotConnectionService cobotConnectionService)
         {
             CobotConnectionService = cobotConnectionService;
-            CobotIpAddress = configuration.Value.CobotSettings.IpAddress;
+            _settingsModel = new();
 
             _currentCobotPosition = new()
             {
@@ -55,17 +53,17 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
             }
         }
         
-        public string SelectedComPort
+        public SettingsModel SettingsModel
         {
             get
             {
-                return _selectedComPort;
+                return _settingsModel;
             }
             set
             {
-                if (value != _selectedComPort)
+                if (value != _settingsModel)
                 {
-                    _selectedComPort = value;
+                    _settingsModel = value;
                     OnPropertyChanged();
                 }
             }
@@ -98,22 +96,6 @@ namespace ValkWelding.Welding.Touch_PoC.ViewModels
                 if (value != _messageBox)
                 {
                     _messageBox = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public string CobotIpAddress
-        {
-            get
-            {
-                return _cobotIpAddress;
-            }
-            set
-            {
-                if (value != _cobotIpAddress)
-                {
-                    _cobotIpAddress = value;
                     OnPropertyChanged();
                 }
             }

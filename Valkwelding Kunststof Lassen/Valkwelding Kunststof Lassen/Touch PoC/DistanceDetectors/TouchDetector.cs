@@ -64,11 +64,13 @@ namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
 
         public bool Connect(string comPort)
         {
-            if (!_serialPort.IsOpen)
+            if (_serialPort.IsOpen)
             {
-                _serialPort.PortName = comPort;
-                _serialPort.Open();
+                _serialPort.Close();
             }
+            _serialPort.PortName = comPort;
+            _serialPort.Open();
+
             if (SendCommand(DetectorCommand.Heartbeat) == DetectorResponse.Succes)
             {
                 return true;
