@@ -59,7 +59,10 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
         {
             ViewModel.AvailableComPorts = new(SerialPort.GetPortNames());
             ViewModel.SettingsModel = _diskManagementService.LoadSettings();
-            ViewModel.SettingsModel.SelectedComPort = ViewModel.AvailableComPorts.FirstOrDefault();
+            if (string.IsNullOrEmpty(ViewModel.SettingsModel.SelectedComPort))
+            {
+                ViewModel.SettingsModel.SelectedComPort = ViewModel.AvailableComPorts.FirstOrDefault();
+            }
         }
 
         protected  void Stop()
