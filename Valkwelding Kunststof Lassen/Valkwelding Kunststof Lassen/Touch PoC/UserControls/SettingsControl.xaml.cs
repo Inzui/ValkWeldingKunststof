@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ValkWelding.Welding.Touch_PoC.DistanceDetectors;
 using ValkWelding.Welding.Touch_PoC.Services;
 using ValkWelding.Welding.Touch_PoC.ViewModels;
 
@@ -32,6 +33,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
         private readonly IPathPlanningService _pathPlanningService;
         private readonly ICobotConnectionService _cobotConnectionService;
         private readonly ICobotControllerService _cobotControllerService;
+        private readonly IDistanceDetector _distanceDetector;
 
         public SettingsControl()
         {
@@ -40,6 +42,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
             _pathPlanningService = App.GetService<IPathPlanningService>();
             _cobotConnectionService = App.GetService<ICobotConnectionService>();
             _cobotControllerService = App.GetService<ICobotControllerService>();
+            _distanceDetector = App.GetService<IDistanceDetector>();
 
             InitializeComponent();
             Start();
@@ -109,14 +112,19 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
             }
         }
 
-        private void Connect_Sensor_Button_Click(object sender, RoutedEventArgs e)
+        private async void Connect_Sensor_Button_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 ViewModel.MessageBoxText = "Connecting Sensor...";
                 ViewModel.ConnectButtonEnabled = false;
-                // TODO
-                ViewModel.MessageBoxText = "Connected";
+
+                string comPort = ViewModel.SelectedComPort;
+                await Task.Run(() =>
+                {
+                    _distanceDetector.Connect(comPort);
+                });
+                ViewModel.MessageBoxText = _distanceDetector.Connected ? "Sensor Connected" : "Sensor Connection Timed Out";
             }
             catch (Exception ex)
             {

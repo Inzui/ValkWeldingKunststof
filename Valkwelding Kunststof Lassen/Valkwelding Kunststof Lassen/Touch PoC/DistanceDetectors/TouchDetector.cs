@@ -7,12 +7,19 @@ using System.Threading;
 using System.Collections.Generic;
 using ValkWelding.Welding.Touch_PoC.Configuration;
 using ValkWelding.Welding.Touch_PoC.Types;
+using System.Windows.Controls;
 
 namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
 {
     public class TouchDetector : IDistanceDetector
     {
-        public bool Connected { get; private set; }
+        public bool Connected { 
+            get 
+            { 
+                return _serialPort.IsOpen && SendCommand(DetectorCommand.Heartbeat) == DetectorResponse.Succes; 
+            }
+            private set { } 
+        }
 
         private readonly SerialPort _serialPort;
         private readonly Dictionary<DetectorCommand, DetectorResponse> _dataQueue;
@@ -21,7 +28,6 @@ namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
         {
             _serialPort = new()
             {
-                PortName = configuration.Value.DistanceDetectorSettings.ComPort,
                 BaudRate = configuration.Value.DistanceDetectorSettings.BaudRate
             };
             _serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedEvent);
@@ -37,7 +43,6 @@ namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
             byte[] recvData = new byte[_bytesToRead];
             serialPort.Read(recvData, 0, _bytesToRead);
 
-            Connected = true;
             byte lastByte = recvData.Last();
             if ((lastByte & (byte)DetectorResponse.Succes) != 0)
             {
@@ -57,20 +62,34 @@ namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
             }
         }
 
-        public void Start()
+        public bool Connect(string comPort)
         {
-            _serialPort.Open();
-            SendCommand(DetectorCommand.Heartbeat);
+            if (!_serialPort.IsOpen)
+            {
+                _serialPort.PortName = comPort;
+                _serialPort.Open();
+            }
+            if (SendCommand(DetectorCommand.Heartbeat) == DetectorResponse.Succes)
+            {
+                return true;
+            }
+            else
+            {
+                _serialPort.Close();
+                return false;
+            }
         }
 
         public DetectorResponse SendCommand(DetectorCommand command)
         {
             _dataQueue[command] = DetectorResponse.UNKNOWN;
             SendToSensor(command);
-            while (_dataQueue[command] == DetectorResponse.UNKNOWN)
+            int tryCounter = 0;
+            while (_dataQueue[command] == DetectorResponse.UNKNOWN && tryCounter <= 50)
             {
                 SendToSensor(command);
                 Thread.Sleep(100);
+                tryCounter++;
             }
             return _dataQueue[command];
         }

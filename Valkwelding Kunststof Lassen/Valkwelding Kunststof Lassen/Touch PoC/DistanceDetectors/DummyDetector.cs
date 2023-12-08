@@ -28,9 +28,9 @@ namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
             throw new System.NotImplementedException();
         }
 
-        public void Start()
+        public bool Connect(string comPort)
         {
-
+            return true;
         }
     }
 }

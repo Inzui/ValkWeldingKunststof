@@ -6,6 +6,6 @@ namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
     {
         bool Connected { get; }
         DetectorResponse SendCommand(DetectorCommand command);
-        void Start();
+        bool Connect(string comPort);
     }
 }
