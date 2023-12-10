@@ -20,6 +20,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
     {
         private ICobotConnectionService _cobotConnectionService;
         private ICobotControllerService _cobotController;
+        private IPositionCalculatorService _positionCalculatorService;
         private IDistanceDetector _distanceDetector;
         private SettingsViewModel _settingsViewModel;
 
@@ -132,49 +133,6 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             return newMeasurePositions;
         }
 
-        private CobotPosition GetCornerPosition(CobotPosition positionOne, CobotPosition positionTwo)
-        {
-            float calibratedYawPositionOne = 360 - positionOne.Yaw;
-            float calibratedYawPositionTwo = 360 - positionTwo.Yaw;
-
-            if ((calibratedYawPositionOne % 90) == 0)
-            {
-                calibratedYawPositionOne += 0.1f;
-            }
-
-            if ((calibratedYawPositionTwo % 90) == 0)
-            {
-                calibratedYawPositionTwo += 0.1f;
-            }
-
-            //Convert the Yaw degrees into a slope
-            double slopeOne = Math.Tan((double)((-calibratedYawPositionOne) * Math.PI / 180.0)); 
-            double slopeTwo = Math.Tan((double)((-calibratedYawPositionTwo) * Math.PI / 180.0));
-
-            //Convert old slope into new perpendicular slope
-            //double perpSlopeOne = slopeOne;
-            //double perpSlopeTwo = slopeTwo;
-
-            //Calculate b value for perpendicular line
-            double perpBOne = positionOne.Y - slopeOne * positionOne.X;
-            double perpBTwo = positionTwo.Y - slopeTwo * positionTwo.X;
-
-            //Calcualte Intersion points between two perpendicular lines
-            double xIntersection = (perpBTwo - perpBOne) / (slopeOne - slopeTwo);
-            double yIntersection = (slopeOne * xIntersection) + perpBOne;
-
-            //Create new position where the two perpendicular lines meet
-            CobotPosition cornerPosition = positionOne.Copy();
-            cornerPosition.X = (float)xIntersection;
-            cornerPosition.Y = (float)yIntersection;
-
-            //Calculate new Yaw by taking average of old two yaw positions
-            //Check if this works with the yaw positioning (taking 360 degrees into account)
-            cornerPosition.Yaw = (positionOne.Yaw + positionTwo.Yaw) / 2;
-            cornerPosition.PointType = PointTypeDefinition.Dummy;
-
-            return cornerPosition;
-        }
         private List<CobotPosition> GeneratePointsBetween(IEnumerable<CobotPosition> measurePoints)
         {
             List<CobotPosition> generatedPoints = new() { measurePoints.First() };
@@ -210,7 +168,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                 }
                 else if(currPos.PointType == PointTypeDefinition.Corner)
                 {
-                    generatedPoints.Add(GetCornerPosition(previousPos, currPos));
+                    generatedPoints.Add(_positionCalculatorService.GetCornerPosition(previousPos, currPos));
                 }
 
                 generatedPoints.Add(currPos);

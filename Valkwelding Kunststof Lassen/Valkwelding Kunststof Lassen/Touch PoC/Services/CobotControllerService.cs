@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using ValkWelding.Welding.Touch_PoC.Configuration;
 using ValkWelding.Welding.Touch_PoC.HelperObjects;
@@ -70,15 +68,6 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             };
 
             return cobotPos;
-        }
-
-        private void PrintPoint(float[] point)
-        {
-            foreach (var p in point)
-            {
-                Debug.Write($"{p}, ");
-            }
-            Debug.WriteLine("");
         }
 
         public void MoveStepToObject(CobotPosition startingPosition, MovementDirection direction, int noOfSteps = 1)
