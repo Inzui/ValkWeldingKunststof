@@ -8,7 +8,12 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>ValkWelding.Welding.$(MSBuildProjectName)</AssemblyName>
 	<IncludePackageReferencesDuringMarkupCompilation>false</IncludePackageReferencesDuringMarkupCompilation>
+	<ApplicationIcon>Media\icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Media\icon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="30.0.1" />
