@@ -8,5 +8,6 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         IEnumerable<CobotPosition> Detect(IEnumerable<CobotPosition> measurePoints);
         void ReturnToStartPos(IEnumerable<CobotPosition> cobotPositions);
         void Start();
+        List<CobotPosition> UpdatePointsMilling(IEnumerable<CobotPosition> cobotPositions);
     }
 }

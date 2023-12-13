@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Printing;
-using System.Text;
-using System.Threading.Tasks;
 using ValkWelding.Welding.Touch_PoC.HelperObjects;
 using ValkWelding.Welding.Touch_PoC.Types;
+using MathNet.Numerics.LinearAlgebra;
+
+
 
 namespace ValkWelding.Welding.Touch_PoC.Services
 {
-    public class PositionCalculatorService
+    public class PositionCalculatorService : IPositionCalculatorService
     {
         private Dictionary<char, double> _circleCoordinates;
 
@@ -49,6 +48,48 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             //Check if this works with the yaw positioning (taking 360 degrees into account)
             cornerPosition.Yaw = ((positionOne.Yaw + positionTwo.Yaw) / 2) % 360;
             cornerPosition.PointType = PointTypeDefinition.Dummy;
+
+            return cornerPosition;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="positionsOne">Array of two points</param>
+        /// <param name="positionsTwo">Array of two points</param>
+        /// <returns>Corner Position</returns>
+        public CobotPosition GetCornerPosition(CobotPosition[] positionsOne, CobotPosition[] positionsTwo)
+        {
+            double[] dV1 = new double[] { positionsOne[0].X, positionsOne[0].Y };
+            double[] dV2 = new double[] { positionsTwo[0].X, positionsTwo[0].Y };
+
+            double[] dD1 = new double[] { positionsOne[1].X - positionsOne[0].X, positionsOne[1].Y - positionsOne[0].Y };
+            double[] dD2 = new double[] { positionsTwo[1].X - positionsTwo[0].X, positionsTwo[1].Y - positionsTwo[0].Y };
+
+            var v1 = Vector<double>.Build.DenseOfArray(dV1);
+            var d1 = Vector<double>.Build.DenseOfArray(dD1);
+
+            var v2 = Vector<double>.Build.DenseOfArray(dV2);
+            var d2 = Vector<double>.Build.DenseOfArray(dD2);
+
+            // Define the coefficients of the system of equations
+            var A = Matrix<double>.Build.DenseOfArray(new double[,] { { d1[0], -d2[0] }, { d1[1], -d2[1] } });
+            var B = v2 - v1;
+
+            // Solve the system of equations
+            var solution = A.Solve(B);
+
+            // Extract the values of t and s
+            double t = solution[0];
+            double s = solution[1];
+
+            // Calculate the point of intersection
+            var intersectionPoint = v1 + t * d1;
+
+            CobotPosition cornerPosition = positionsOne[0].Copy();
+            cornerPosition.X = (float)intersectionPoint[0];
+            cornerPosition.Y = (float)intersectionPoint[1];
+            cornerPosition.Yaw = ((positionsOne[0].Yaw + positionsTwo[0].Yaw) / 2) % 360;
 
             return cornerPosition;
         }
@@ -95,11 +136,12 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             // r is the radius
             double r = Math.Round(Math.Sqrt(sqr_of_r), 5);
 
-            _circleCoordinates = new Dictionary<char, double>();
-
-            _circleCoordinates.Add('h', h);
-            _circleCoordinates.Add('k', k);
-            _circleCoordinates.Add('r', r);
+            _circleCoordinates = new Dictionary<char, double>
+            {
+                { 'h', h },
+                { 'k', k },
+                { 'r', r }
+            };
         }
 
         private void FitCircle(CobotPosition posOne, CobotPosition posTwo, double radius)
@@ -123,17 +165,17 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             //Center of circle is (h, k) with radius r
 
             //Check if both points are on the top half of the circle
-            if(posOne.Y > _circleCoordinates['k'] && posThree.Y > _circleCoordinates['k'])
+            if (posOne.Y >= _circleCoordinates['k'] && posThree.Y >= _circleCoordinates['k'])
             {
                 return GetPointsOnSameHorizontalHalfCircle(posOne, posThree, noOfPoints, true);
-            } 
+            }
             //Check if both points are on the bottom half of the circle
             else if (posOne.Y < _circleCoordinates['k'] && posThree.Y < _circleCoordinates['k'])
             {
                 return GetPointsOnSameHorizontalHalfCircle(posOne, posThree, noOfPoints, false);
             }
             //Check if both points are on the right half of the circle
-            else if (posOne.X > _circleCoordinates['h'] && posThree.X > _circleCoordinates['h'])
+            else if (posOne.X >= _circleCoordinates['h'] && posThree.X >= _circleCoordinates['h'])
             {
                 return GetPointsOnSameVerticalHalfCircle(posOne, posThree, noOfPoints, true);
             }
@@ -234,12 +276,12 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             if (upper)
             {
                 return (float)y1;
-            } 
+            }
             else
             {
                 return (float)y2;
             }
-            
+
         }
 
         private float GetCircleXCoordinate(float y, bool right)

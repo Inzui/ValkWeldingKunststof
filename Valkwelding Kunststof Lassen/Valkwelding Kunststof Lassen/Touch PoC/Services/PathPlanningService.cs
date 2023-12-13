@@ -83,7 +83,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             {
                 _cobotController.MoveToDirect(cobotPosition);
             }
-            _cobotController.StepSize = _roughStepSize*2;
+            _cobotController.StepSize = _roughStepSize * 2;
             _cobotController.MoveToDirect(_cobotController.GetBackwardMovementPosition(reversedPositions.Last()));
         }
 
@@ -142,7 +142,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                 CobotPosition previousPos = measurePoints.ElementAt(i - 1);
                 CobotPosition currPos = measurePoints.ElementAt(i);
 
-                if(currPos.PointType == PointTypeDefinition.Line)
+                if (currPos.PointType == PointTypeDefinition.Line)
                 {
                     if (currPos.PointsToGenerateBetweenLast > 0)
                     {
@@ -166,7 +166,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                         }
                     }
                 }
-                else if(currPos.PointType == PointTypeDefinition.Corner)
+                else if (currPos.PointType == PointTypeDefinition.Corner)
                 {
                     generatedPoints.Add(_positionCalculatorService.GetCornerPosition(previousPos, currPos));
                 }
@@ -175,6 +175,24 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             }
 
             return generatedPoints;
+        }
+
+        public List<CobotPosition> UpdatePointsMilling(IEnumerable<CobotPosition> cobotPositions)
+        {
+            List<CobotPosition> cobotPositionsList = cobotPositions.ToList();
+
+            for (int i = 0; i < cobotPositionsList.Count(); i++)
+            {
+                if (cobotPositionsList[i].PointType == PointTypeDefinition.Corner)
+                {
+                    //TODO: Check if the list is long enough
+                    CobotPosition[] previousPositions = new CobotPosition[] { cobotPositionsList[i - 1], cobotPositionsList[i - 2] };
+                    CobotPosition[] nextPositions = new CobotPosition[] { cobotPositionsList[i - 1], cobotPositionsList[i - 2] };
+                    cobotPositionsList[i] = _positionCalculatorService.GetCornerPosition(previousPositions, nextPositions);
+                }
+            }
+
+            return cobotPositionsList;
         }
     }
 }

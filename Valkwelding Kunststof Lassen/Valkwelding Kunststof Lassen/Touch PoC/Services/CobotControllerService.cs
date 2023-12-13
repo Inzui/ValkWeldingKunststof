@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using ValkWelding.Welding.Touch_PoC.Configuration;
 using ValkWelding.Welding.Touch_PoC.HelperObjects;
@@ -28,10 +29,12 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             StepSize = _millingStepSize;
             StartMill();
             Thread.Sleep(1000);
+
             foreach (CobotPosition cobotPosition in cobotPositions)
             {
                 MoveToDirect(cobotPosition);
             }
+
             StopMill();
         }
 
