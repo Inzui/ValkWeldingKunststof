@@ -8,7 +8,7 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
 {
-    public class PositionCalculatorService : IPositionCalculatorService
+    public class PositionCalculatorService
     {
         private Dictionary<char, double> _circleCoordinates;
 

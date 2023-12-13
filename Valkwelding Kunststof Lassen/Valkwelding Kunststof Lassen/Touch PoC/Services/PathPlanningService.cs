@@ -20,7 +20,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
     {
         private ICobotConnectionService _cobotConnectionService;
         private ICobotControllerService _cobotController;
-        private IPositionCalculatorService _positionCalculatorService;
+        private PositionCalculatorService _positionCalculatorService;
         private IDistanceDetector _distanceDetector;
         private SettingsViewModel _settingsViewModel;
 
@@ -30,12 +30,13 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         private float _roughStepSize;
         private float _preciseStepSize;
 
-        public PathPlanningService(IOptions<LocalConfig> configuration, ICobotConnectionService connectionService, ICobotControllerService cobotController, IDistanceDetector distanceDetector, SettingsViewModel settingsViewModel)
+        public PathPlanningService(IOptions<LocalConfig> configuration, ICobotConnectionService connectionService, ICobotControllerService cobotController, IDistanceDetector distanceDetector, PositionCalculatorService positionCalculator, SettingsViewModel settingsViewModel)
         {
             _cobotConnectionService = connectionService;
             _cobotController = cobotController;
             _distanceDetector = distanceDetector;
             _settingsViewModel = settingsViewModel;
+            _positionCalculatorService = positionCalculator;
 
             _getPositionTimer = new();
             _getPositionTimer.Elapsed += new ElapsedEventHandler(GetCurrentCobotPositionEvent);
