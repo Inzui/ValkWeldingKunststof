@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ValkWelding.Welding.Touch_PoC"
         xmlns:uc="clr-namespace:ValkWelding.Welding.Touch_PoC.UserControls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1000"
+        Title="Poly Touch" Height="450" Width="1000"
         ResizeMode="NoResize">
     <Grid Background="#FF313131">
         <Grid.ColumnDefinitions>

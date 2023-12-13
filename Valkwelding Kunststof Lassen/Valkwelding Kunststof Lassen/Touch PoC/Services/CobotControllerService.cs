@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
 using ValkWelding.Welding.Touch_PoC.Configuration;
 using ValkWelding.Welding.Touch_PoC.HelperObjects;
 using ValkWelding.Welding.Touch_PoC.Types;
@@ -13,16 +15,32 @@ namespace ValkWelding.Welding.Touch_PoC.Services
     public class CobotControllerService : ICobotControllerService
     {
         private ICobotConnectionService _cob;
-        public float Speed { get; set; }
+        public float MovementSpeed { get; private set; }
+        public float MillingSpeed { get; private set; }
         public float StepSize { get; set; }
+        public CobotPosition CurrentPosition { get; private set; }
 
         private float _millingStepSize;
+        System.Timers.Timer _gettingPositionTimer;
+        private bool _gettingPosition;
 
         public CobotControllerService(IOptions<LocalConfig> configuration, ICobotConnectionService cobotConnect)
         {
             _cob = cobotConnect;
-            Speed = configuration.Value.CobotSettings.MovementSpeed;
+            MovementSpeed = configuration.Value.CobotSettings.MovementSpeed;
+            MillingSpeed = configuration.Value.CobotSettings.MillingMovementSpeed;
             _millingStepSize = configuration.Value.CobotSettings.MovementPreciseStepSize;
+            CurrentPosition = new();
+
+            _gettingPositionTimer = new();
+            _gettingPositionTimer.Interval = 10;
+            _gettingPositionTimer.Elapsed += new ElapsedEventHandler(GetCobotPositionEventAsync);
+            _gettingPosition = false;
+        }
+
+        public void Start()
+        {
+            _gettingPositionTimer.Start();
         }
 
         public void StartMillSequence(IEnumerable<CobotPosition> cobotPositions)
@@ -32,44 +50,60 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             Thread.Sleep(1000);
             foreach (CobotPosition cobotPosition in cobotPositions)
             {
-                MoveToDirect(cobotPosition);
+                MoveToDirect(cobotPosition, MillingSpeed);
             }
             StopMill();
         }
 
-        public void MoveToDirect(CobotPosition destination)
+        public void MoveToDirect(CobotPosition destination, float speed)
         {
-            CobotPosition currentPos = GetCobotPosition();
             float[] desPosArray = { destination.X, destination.Y, destination.Z, destination.Roll, destination.Pitch, destination.Yaw };
 
-            if (currentPos.EqualPosition(destination, StepSize / 2))
+            if (CurrentPosition.EqualPosition(destination, StepSize / 2))
             {
-                Thread.Sleep(500);
                 return;
             }
 
-            _cob.sendCobotPos(desPosArray, Speed);
-            while (!currentPos.EqualPosition(destination, StepSize / 2))
+            _cob.sendCobotPos(desPosArray, speed);
+            while (!CurrentPosition.EqualPosition(destination, StepSize / 2))
             {
-                currentPos = GetCobotPosition();
+                // Wait
             }
         }
 
-        public CobotPosition GetCobotPosition()
+        private async void GetCobotPositionEventAsync(object source, ElapsedEventArgs e)
         {
-            float[] currentPos = _cob.readPos();
-
-            CobotPosition cobotPos = new()
+            if (_cob.CobotConnected && !_gettingPosition)
             {
-                X = currentPos[0],
-                Y = currentPos[1],
-                Z = currentPos[2],
-                Roll = currentPos[3] + 180,
-                Pitch = (-currentPos[4]) + 180,
-                Yaw = currentPos[5] + 180
-            };
-
-            return cobotPos;
+                _gettingPosition = true;
+                try
+                {
+                    await Task.Run(() =>
+                    {
+                        float[] currentPos = _cob.readPos();
+                        lock (CurrentPosition)
+                        {
+                            CurrentPosition = new()
+                            {
+                                X = currentPos[0],
+                                Y = currentPos[1],
+                                Z = currentPos[2],
+                                Roll = currentPos[3] + 180,
+                                Pitch = (-currentPos[4]) + 180,
+                                Yaw = currentPos[5] + 180
+                            };
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+                finally
+                {
+                    _gettingPosition = false;
+                }
+            }
         }
 
         private void PrintPoint(float[] point)
@@ -84,7 +118,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         public void MoveStepToObject(CobotPosition startingPosition, MovementDirection direction, int noOfSteps = 1)
         {
             CobotPosition nextPosition;
-            for(int i = 0; i < noOfSteps; i++)
+            for (int i = 0; i < noOfSteps; i++)
             {
                 if (direction == MovementDirection.Forward)
                 {
@@ -95,7 +129,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                     nextPosition = GetBackwardMovementPosition(startingPosition);
                 }
 
-                MoveToDirect(nextPosition);
+                MoveToDirect(nextPosition, MillingSpeed);
                 startingPosition = nextPosition;
             }
         }

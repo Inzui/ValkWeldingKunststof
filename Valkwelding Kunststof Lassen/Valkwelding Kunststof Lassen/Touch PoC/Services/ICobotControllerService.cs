@@ -6,14 +6,16 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 {
     public interface ICobotControllerService
     {
-        float Speed { get; set; }
+        CobotPosition CurrentPosition { get; }
+        float MovementSpeed { get; }
+        float MillingSpeed { get; }
         float StepSize { get; set; }
 
+        void Start();
         CobotPosition GetBackwardMovementPosition(CobotPosition startingPosition);
-        CobotPosition GetCobotPosition();
         CobotPosition GetForwardMovementPosition(CobotPosition startingPosition);
         void MoveStepToObject(CobotPosition startingPosition, MovementDirection direction, int noOfSteps = 1);
-        void MoveToDirect(CobotPosition destination);
+        void MoveToDirect(CobotPosition destination, float speed);
         void StartMill();
         void StartMillSequence(IEnumerable<CobotPosition> cobotPositions);
         void StopMill();
