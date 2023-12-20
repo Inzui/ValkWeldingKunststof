@@ -184,11 +184,11 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
             for (int i = 0; i < cobotPositionsList.Count(); i++)
             {
-                if (cobotPositionsList[i].PointType == PointTypeDefinition.Corner)
+                if (cobotPositionsList[i].PointType == PointTypeDefinition.Dummy)
                 {
                     //TODO: Check if the list is long enough
                     CobotPosition[] previousPositions = new CobotPosition[] { cobotPositionsList[i - 1], cobotPositionsList[i - 2] };
-                    CobotPosition[] nextPositions = new CobotPosition[] { cobotPositionsList[i - 1], cobotPositionsList[i - 2] };
+                    CobotPosition[] nextPositions = new CobotPosition[] { cobotPositionsList[i + 1], cobotPositionsList[i + 2] };
                     cobotPositionsList[i] = _positionCalculatorService.GetCornerPosition(previousPositions, nextPositions);
                 }
             }

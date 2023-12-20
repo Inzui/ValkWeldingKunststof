@@ -90,6 +90,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             cornerPosition.X = (float)intersectionPoint[0];
             cornerPosition.Y = (float)intersectionPoint[1];
             cornerPosition.Yaw = ((positionsOne[0].Yaw + positionsTwo[0].Yaw) / 2) % 360;
+            cornerPosition.PointType = PointTypeDefinition.Dummy;
 
             return cornerPosition;
         }
