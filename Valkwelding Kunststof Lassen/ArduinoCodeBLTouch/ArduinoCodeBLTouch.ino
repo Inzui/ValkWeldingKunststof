@@ -10,8 +10,8 @@
 #define START_DETECTING 0x02
 #define REQUEST_OBJECT_DETECTED 0x04
 
-// Outgoing commands
-#define SUCCES 0x1
+// Outgoing responses
+#define SUCCESS 0x1
 #define OBJECT_DETECTED 0x2
 #define OBJECT_NOT_DETECTED 0x4
 
@@ -33,7 +33,7 @@ void loop() {
   }
 
   if (incomingByte & HEARTBEAT) {
-    Serial.write(SUCCES);
+    Serial.write(SUCCESS);
   }
 
   if (incomingByte & START_DETECTING) {
@@ -41,7 +41,7 @@ void loop() {
     detected = false;
     detecting = true;
 
-    Serial.write(SUCCES);
+    Serial.write(SUCCESS);
   }
 
   if (incomingByte & REQUEST_OBJECT_DETECTED) {
