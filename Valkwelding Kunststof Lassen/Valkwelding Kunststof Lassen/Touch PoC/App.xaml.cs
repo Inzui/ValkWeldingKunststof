@@ -44,6 +44,7 @@ namespace ValkWelding.Welding.Touch_PoC
             // Add ViewModels
             services.AddScoped<SettingsViewModel>();
             services.AddScoped<PointListViewModel>();
+            services.AddScoped<PositionCalculatorService>();
         }
 
         private void OnStartup(object sender, StartupEventArgs e)

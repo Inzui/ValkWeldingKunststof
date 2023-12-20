@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,10 +47,12 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             StepSize = _millingStepSize;
             StartMill();
             Thread.Sleep(1000);
+
             foreach (CobotPosition cobotPosition in cobotPositions)
             {
                 MoveToDirect(cobotPosition, MillingSpeed);
             }
+
             StopMill();
         }
 
@@ -104,15 +105,6 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                     _gettingPosition = false;
                 }
             }
-        }
-
-        private void PrintPoint(float[] point)
-        {
-            foreach (var p in point)
-            {
-                Debug.Write($"{p}, ");
-            }
-            Debug.WriteLine("");
         }
 
         public void MoveStepToObject(CobotPosition startingPosition, MovementDirection direction, int noOfSteps = 1)

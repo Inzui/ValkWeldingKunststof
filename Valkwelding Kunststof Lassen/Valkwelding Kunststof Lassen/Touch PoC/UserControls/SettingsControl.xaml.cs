@@ -88,7 +88,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
                     ViewModel.MessageBoxText = "Milling...";
                     await Task.Run(() =>
                     {
-                        _cobotControllerService.StartMillSequence(_pointListViewModel.MeasuredPositions);
+                        _cobotControllerService.StartMillSequence(_pathPlanningService.UpdatePointsMilling(_pointListViewModel.MeasuredPositions));
                     });
 
                     ViewModel.MessageBoxText = "Milling Done";

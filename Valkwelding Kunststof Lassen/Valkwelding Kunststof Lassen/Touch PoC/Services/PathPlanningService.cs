@@ -20,6 +20,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
     {
         private ICobotConnectionService _cobotConnectionService;
         private ICobotControllerService _cobotController;
+        private PositionCalculatorService _positionCalculatorService;
         private IDistanceDetector _distanceDetector;
         private SettingsViewModel _settingsViewModel;
 
@@ -29,12 +30,13 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         private float _roughStepSize;
         private float _preciseStepSize;
 
-        public PathPlanningService(IOptions<LocalConfig> configuration, ICobotConnectionService connectionService, ICobotControllerService cobotController, IDistanceDetector distanceDetector, SettingsViewModel settingsViewModel)
+        public PathPlanningService(IOptions<LocalConfig> configuration, ICobotConnectionService connectionService, ICobotControllerService cobotController, IDistanceDetector distanceDetector, PositionCalculatorService positionCalculator, SettingsViewModel settingsViewModel)
         {
             _cobotConnectionService = connectionService;
             _cobotController = cobotController;
             _distanceDetector = distanceDetector;
             _settingsViewModel = settingsViewModel;
+            _positionCalculatorService = positionCalculator;
 
             _getPositionTimer = new();
             _getPositionTimer.Elapsed += new ElapsedEventHandler(GetCurrentCobotPositionEvent);
@@ -132,49 +134,6 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             return newMeasurePositions;
         }
 
-        private CobotPosition GetCornerPosition(CobotPosition positionOne, CobotPosition positionTwo)
-        {
-            float calibratedYawPositionOne = 360 - positionOne.Yaw;
-            float calibratedYawPositionTwo = 360 - positionTwo.Yaw;
-
-            if ((calibratedYawPositionOne % 90) == 0)
-            {
-                calibratedYawPositionOne += 0.1f;
-            }
-
-            if ((calibratedYawPositionTwo % 90) == 0)
-            {
-                calibratedYawPositionTwo += 0.1f;
-            }
-
-            //Convert the Yaw degrees into a slope
-            double slopeOne = Math.Tan((double)((-calibratedYawPositionOne) * Math.PI / 180.0)); 
-            double slopeTwo = Math.Tan((double)((-calibratedYawPositionTwo) * Math.PI / 180.0));
-
-            //Convert old slope into new perpendicular slope
-            //double perpSlopeOne = slopeOne;
-            //double perpSlopeTwo = slopeTwo;
-
-            //Calculate b value for perpendicular line
-            double perpBOne = positionOne.Y - slopeOne * positionOne.X;
-            double perpBTwo = positionTwo.Y - slopeTwo * positionTwo.X;
-
-            //Calcualte Intersion points between two perpendicular lines
-            double xIntersection = (perpBTwo - perpBOne) / (slopeOne - slopeTwo);
-            double yIntersection = (slopeOne * xIntersection) + perpBOne;
-
-            //Create new position where the two perpendicular lines meet
-            CobotPosition cornerPosition = positionOne.Copy();
-            cornerPosition.X = (float)xIntersection;
-            cornerPosition.Y = (float)yIntersection;
-
-            //Calculate new Yaw by taking average of old two yaw positions
-            //Check if this works with the yaw positioning (taking 360 degrees into account)
-            cornerPosition.Yaw = (positionOne.Yaw + positionTwo.Yaw) / 2;
-            cornerPosition.PointType = PointTypeDefinition.Dummy;
-
-            return cornerPosition;
-        }
         private List<CobotPosition> GeneratePointsBetween(IEnumerable<CobotPosition> measurePoints)
         {
             List<CobotPosition> generatedPoints = new() { measurePoints.First() };
@@ -184,7 +143,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                 CobotPosition previousPos = measurePoints.ElementAt(i - 1);
                 CobotPosition currPos = measurePoints.ElementAt(i);
 
-                if(currPos.PointType == PointTypeDefinition.Line)
+                if (currPos.PointType == PointTypeDefinition.Line)
                 {
                     if (currPos.PointsToGenerateBetweenLast > 0)
                     {
@@ -208,15 +167,33 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                         }
                     }
                 }
-                else if(currPos.PointType == PointTypeDefinition.Corner)
+                else if (currPos.PointType == PointTypeDefinition.Corner)
                 {
-                    generatedPoints.Add(GetCornerPosition(previousPos, currPos));
+                    generatedPoints.Add(_positionCalculatorService.GetCornerPosition(previousPos, currPos));
                 }
 
                 generatedPoints.Add(currPos);
             }
 
             return generatedPoints;
+        }
+
+        public List<CobotPosition> UpdatePointsMilling(IEnumerable<CobotPosition> cobotPositions)
+        {
+            List<CobotPosition> cobotPositionsList = cobotPositions.ToList();
+
+            for (int i = 0; i < cobotPositionsList.Count(); i++)
+            {
+                if (cobotPositionsList[i].PointType == PointTypeDefinition.Corner)
+                {
+                    //TODO: Check if the list is long enough
+                    CobotPosition[] previousPositions = new CobotPosition[] { cobotPositionsList[i - 1], cobotPositionsList[i - 2] };
+                    CobotPosition[] nextPositions = new CobotPosition[] { cobotPositionsList[i - 1], cobotPositionsList[i - 2] };
+                    cobotPositionsList[i] = _positionCalculatorService.GetCornerPosition(previousPositions, nextPositions);
+                }
+            }
+
+            return cobotPositionsList;
         }
     }
 }
