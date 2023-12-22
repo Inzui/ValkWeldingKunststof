@@ -14,14 +14,15 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 {
     public class CobotControllerService : ICobotControllerService
     {
-        private ICobotConnectionService _cob;
+        private readonly ICobotConnectionService _cob;
         public float MovementSpeed { get; private set; }
         public float MillingSpeed { get; private set; }
         public float StepSize { get; set; }
         public CobotPosition CurrentPosition { get; private set; }
 
-        private float _millingStepSize;
-        System.Timers.Timer _gettingPositionTimer;
+        private readonly int _yawOffsetDegrees;
+        private readonly float _millingStepSize;
+        readonly System.Timers.Timer _gettingPositionTimer;
         private bool _gettingPosition;
 
         public CobotControllerService(IOptions<LocalConfig> configuration, ICobotConnectionService cobotConnect)
@@ -29,6 +30,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             _cob = cobotConnect;
             MovementSpeed = configuration.Value.CobotSettings.MovementSpeed;
             MillingSpeed = configuration.Value.CobotSettings.MillingMovementSpeed;
+            _yawOffsetDegrees = configuration.Value.CobotSettings.YawOffsetDegrees;
             _millingStepSize = configuration.Value.CobotSettings.MovementPreciseStepSize;
             CurrentPosition = new();
 
@@ -130,7 +132,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         public CobotPosition GetForwardMovementPosition(CobotPosition startingPosition)
         {
             //Place head in right direction
-            float alpha = (float)((-startingPosition.Yaw + 90) * Math.PI / 180.0);
+            float alpha = (float)((-startingPosition.Yaw + _yawOffsetDegrees) * Math.PI / 180.0);
 
             float deltaX = (float)Math.Cos(alpha) * StepSize;
             float deltaY = (float)Math.Sin(alpha) * -StepSize;
@@ -145,7 +147,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         public CobotPosition GetBackwardMovementPosition(CobotPosition startingPosition)
         {
             //Place head in right direction
-            float alpha = (float)((-startingPosition.Yaw + 90) * Math.PI / 180.0);
+            float alpha = (float)((-startingPosition.Yaw + _yawOffsetDegrees) * Math.PI / 180.0);
 
             float deltaX = (float)Math.Cos(alpha) * StepSize;
             float deltaY = (float)Math.Sin(alpha) * -StepSize;
