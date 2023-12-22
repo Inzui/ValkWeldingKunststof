@@ -10,10 +10,11 @@ namespace ValkWelding.Welding.Touch_PoC.Configuration
     {
         public string IpAddress { get; set; }
         public int Port { get; set; }
-        public int YawOffsetDegrees { get; set; }
+        public float YawOffsetDegrees { get; set; }
         public float MovementSpeed { get; set; }
         public float MillingMovementSpeed { get; set; }
         public float MovementRoughStepSize { get; set; }
         public float MovementPreciseStepSize { get; set; }
+        public float MillOffset { get; set; }
     }
 }

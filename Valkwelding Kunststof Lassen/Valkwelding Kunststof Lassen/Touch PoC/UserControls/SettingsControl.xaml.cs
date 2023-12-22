@@ -82,7 +82,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
                     ViewModel.MessageBoxText = "Returning to starting position...";
                     await Task.Run(() =>
                     {
-                        _pathPlanningService.ReturnToStartPos(_pointListViewModel.MeasuredPositions);
+                        _pathPlanningService.ReturnToStartPos(_pointListViewModel.MeasuredPositions, false);
                     });
 
                     ViewModel.MessageBoxText = "Milling...";

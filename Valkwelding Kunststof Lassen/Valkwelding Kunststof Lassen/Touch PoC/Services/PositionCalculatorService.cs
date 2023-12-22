@@ -3,19 +3,25 @@ using System.Collections.Generic;
 using ValkWelding.Welding.Touch_PoC.HelperObjects;
 using ValkWelding.Welding.Touch_PoC.Types;
 using MathNet.Numerics.LinearAlgebra;
-
-
+using Microsoft.Extensions.Options;
+using ValkWelding.Welding.Touch_PoC.Configuration;
 
 namespace ValkWelding.Welding.Touch_PoC.Services
 {
     public class PositionCalculatorService
     {
         private Dictionary<char, double> _circleCoordinates;
+        private readonly float _yawOffset;
+
+        public PositionCalculatorService(IOptions<LocalConfig> configuration)
+        {
+            _yawOffset = configuration.Value.CobotSettings.YawOffsetDegrees;
+        }
 
         public CobotPosition GetCornerPosition(CobotPosition positionOne, CobotPosition positionTwo)
         {
-            float calibratedYawPositionOne = 360 - positionOne.Yaw;
-            float calibratedYawPositionTwo = 360 - positionTwo.Yaw;
+            float calibratedYawPositionOne = 450 - positionOne.Yaw + _yawOffset;
+            float calibratedYawPositionTwo = 450 - positionTwo.Yaw + _yawOffset;
 
             if ((calibratedYawPositionOne % 90) == 0)
             {

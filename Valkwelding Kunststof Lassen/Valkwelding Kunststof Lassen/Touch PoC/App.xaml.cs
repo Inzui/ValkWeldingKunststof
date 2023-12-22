@@ -41,6 +41,7 @@ namespace ValkWelding.Welding.Touch_PoC
             services.AddSingleton<IPathPlanningService, PathPlanningService>();
             services.AddSingleton<IDiskManagementService, DiskManagementService>();
 
+
             // Add ViewModels
             services.AddScoped<SettingsViewModel>();
             services.AddScoped<PointListViewModel>();

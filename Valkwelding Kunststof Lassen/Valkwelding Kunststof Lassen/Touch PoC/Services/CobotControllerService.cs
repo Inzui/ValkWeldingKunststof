@@ -20,9 +20,11 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         public float StepSize { get; set; }
         public CobotPosition CurrentPosition { get; private set; }
 
-        private readonly int _yawOffsetDegrees;
+        private readonly float _yawOffsetDegrees;
         private readonly float _millingStepSize;
-        readonly System.Timers.Timer _gettingPositionTimer;
+        private readonly float _millingOffset;
+
+        private readonly System.Timers.Timer _gettingPositionTimer;
         private bool _gettingPosition;
 
         public CobotControllerService(IOptions<LocalConfig> configuration, ICobotConnectionService cobotConnect)
@@ -32,6 +34,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             MillingSpeed = configuration.Value.CobotSettings.MillingMovementSpeed;
             _yawOffsetDegrees = configuration.Value.CobotSettings.YawOffsetDegrees;
             _millingStepSize = configuration.Value.CobotSettings.MovementPreciseStepSize;
+            _millingOffset = configuration.Value.CobotSettings.MillOffset;
             CurrentPosition = new();
 
             _gettingPositionTimer = new();
@@ -157,6 +160,18 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             newPosition.Y -= deltaY;
 
             return newPosition;
+        }
+
+        public void AddMillingOffsetPosition(CobotPosition position)
+        {
+            //Place head in right direction
+            float alpha = (float)((-position.Yaw + _yawOffsetDegrees) * Math.PI / 180.0);
+
+            float deltaX = (float)Math.Cos(alpha) * _millingOffset;
+            float deltaY = (float)Math.Sin(alpha) * -_millingOffset;
+
+            position.X += deltaX;
+            position.Y += deltaY;
         }
 
         public void StartMill()

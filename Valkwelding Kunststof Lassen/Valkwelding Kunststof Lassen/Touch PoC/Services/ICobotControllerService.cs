@@ -14,6 +14,7 @@ namespace ValkWelding.Welding.Touch_PoC.Services
         void Start();
         CobotPosition GetBackwardMovementPosition(CobotPosition startingPosition);
         CobotPosition GetForwardMovementPosition(CobotPosition startingPosition);
+        void AddMillingOffsetPosition(CobotPosition position);
         void MoveStepToObject(CobotPosition startingPosition, MovementDirection direction, int noOfSteps = 1);
         void MoveToDirect(CobotPosition destination, float speed);
         void StartMill();

@@ -74,10 +74,16 @@ namespace ValkWelding.Welding.Touch_PoC.Services
             }
         }
 
-        public void ReturnToStartPos(IEnumerable<CobotPosition> cobotPositions)
+        public void ReturnToStartPos(IEnumerable<CobotPosition> cobotPositions, bool generatePointsBetween)
         {
             _cobotController.StepSize = _roughStepSize;
-            IEnumerable<CobotPosition> fullCobotPositions = GeneratePointsBetween(cobotPositions);
+
+            IEnumerable<CobotPosition> fullCobotPositions = cobotPositions;
+            if (generatePointsBetween)
+            {
+                fullCobotPositions = GeneratePointsBetween(cobotPositions);
+            }
+            
             IEnumerable<CobotPosition> reversedPositions = fullCobotPositions.Reverse();
 
             foreach (CobotPosition cobotPosition in reversedPositions)
@@ -127,6 +133,8 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                         measurePosition.Pitch = objectPosition.Pitch;
                         measurePosition.Roll = objectPosition.Roll;
                         measurePosition.Yaw = objectPosition.Yaw;
+
+                        _cobotController.AddMillingOffsetPosition(measurePosition);
                         _cobotController.MoveToDirect(returnPosition, _cobotController.MovementSpeed);
                     }
                 }
@@ -147,12 +155,12 @@ namespace ValkWelding.Welding.Touch_PoC.Services
                 {
                     if (currPos.PointsToGenerateBetweenLast > 0)
                     {
-                        float distributionX = (currPos.X - previousPos.X) / currPos.PointsToGenerateBetweenLast;
-                        float distributionY = (currPos.Y - previousPos.Y) / currPos.PointsToGenerateBetweenLast;
-                        float distributionZ = (currPos.Z - previousPos.Z) / currPos.PointsToGenerateBetweenLast;
-                        float distributionJaw = (currPos.Yaw - previousPos.Yaw) / currPos.PointsToGenerateBetweenLast;
+                        float distributionX = (currPos.X - previousPos.X) / (currPos.PointsToGenerateBetweenLast + 1);
+                        float distributionY = (currPos.Y - previousPos.Y) / (currPos.PointsToGenerateBetweenLast + 1);
+                        float distributionZ = (currPos.Z - previousPos.Z) / (currPos.PointsToGenerateBetweenLast + 1);
+                        float distributionJaw = (currPos.Yaw - previousPos.Yaw) / (currPos.PointsToGenerateBetweenLast + 1);
 
-                        for (int j = 0; j < currPos.PointsToGenerateBetweenLast - 1; j++)
+                        for (int j = 0; j < currPos.PointsToGenerateBetweenLast; j++)
                         {
                             generatedPoints.Add(new CobotPosition()
                             {
@@ -184,11 +192,11 @@ namespace ValkWelding.Welding.Touch_PoC.Services
 
             for (int i = 0; i < cobotPositionsList.Count(); i++)
             {
-                if (cobotPositionsList[i].PointType == PointTypeDefinition.Corner)
+                if (cobotPositionsList[i].PointType == PointTypeDefinition.Dummy)
                 {
                     //TODO: Check if the list is long enough
                     CobotPosition[] previousPositions = new CobotPosition[] { cobotPositionsList[i - 1], cobotPositionsList[i - 2] };
-                    CobotPosition[] nextPositions = new CobotPosition[] { cobotPositionsList[i - 1], cobotPositionsList[i - 2] };
+                    CobotPosition[] nextPositions = new CobotPosition[] { cobotPositionsList[i + 1], cobotPositionsList[i + 2] };
                     cobotPositionsList[i] = _positionCalculatorService.GetCornerPosition(previousPositions, nextPositions);
                 }
             }

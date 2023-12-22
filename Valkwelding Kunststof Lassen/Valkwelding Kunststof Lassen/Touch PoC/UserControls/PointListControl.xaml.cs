@@ -124,7 +124,7 @@ namespace ValkWelding.Welding.Touch_PoC.UserControls
                     ObservableCollection<CobotPosition> measuredPositions = ViewModel.ToMeasurePositions;
                     await Task.Run(() =>
                     {
-                        _pathPlanningService.ReturnToStartPos(measuredPositions);
+                        _pathPlanningService.ReturnToStartPos(measuredPositions, true);
                     });
 
                     _settingsViewModel.MessageBoxText = "Running Measurements...";
