@@ -35,7 +35,7 @@ namespace ValkWelding.Welding.PolyTouchApplication.Services
                 _ipAddress = ipAddress;
                 try
                 {
-                    await Task.Run(readPos);
+                    await Task.Run(ReadPos);
                     CobotConnected = true;
                 }
                 catch (Exception ex)
@@ -52,33 +52,33 @@ namespace ValkWelding.Welding.PolyTouchApplication.Services
             }
         }
 
-        public void sendCobotMove(float[] point, float speed)
+        public void SendCobotMove(float[] point, float speed)
         {
-            string command = $"Move_Line(\"TPP\",{toText(point)},{speed},200,0,false)";
+            string command = $"Move_Line(\"TPP\",{ToText(point)},{speed},200,0,false)";
 
             using (Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp))
             {
-                byte[] byteCommand = Encoding.UTF8.GetBytes(packetSender(command));
+                byte[] byteCommand = Encoding.UTF8.GetBytes(PacketSender(command));
 
                 socket.Connect(_ipAddress, _port);
                 socket.Send(byteCommand);
             }
         }
 
-        public void sendCobotPos(float[] point, float speed)
+        public void SendCobotPos(float[] point, float speed)
         {
-            string command = $"Line(\"CPP\",{toText(point)},{speed},200,0,false)";
+            string command = $"Line(\"CPP\",{ToText(point)},{speed},200,0,false)";
 
             using (Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp))
             {
-                byte[] byteCommand = Encoding.UTF8.GetBytes(packetSender(command));
+                byte[] byteCommand = Encoding.UTF8.GetBytes(PacketSender(command));
 
                 socket.Connect(_ipAddress, _port);
                 socket.Send(byteCommand);
             }
         }
 
-        public float[] readPos()
+        public float[] ReadPos()
         {
             float[] ret = new float[6];
 
@@ -90,7 +90,7 @@ namespace ValkWelding.Welding.PolyTouchApplication.Services
                     {
                         ushort address = Convert.ToUInt16(7001 + i * 2);
                         var output = master.ReadInputRegisters(address, 2);
-                        ret[i] = floater(output[1], output[0]);
+                        ret[i] = Floater(output[1], output[0]);
                     }
                 }
             }
@@ -150,21 +150,21 @@ namespace ValkWelding.Welding.PolyTouchApplication.Services
             return 0;
         }
 
-        private string packetSender(string command)
+        private string PacketSender(string command)
         {
-            string h = chkStr(command);
+            string h = ChkStr(command);
 
-            string d = checksum(h);
+            string d = Checksum(h);
 
             return $"${h}*{d}\r\n";
         }
 
-        private string chkStr(string str)
+        private string ChkStr(string str)
         {
             return $"TMSCT,{str.Length + 2},3,{str},";
         }
 
-        private float floater(ushort x, ushort y)
+        private float Floater(ushort x, ushort y)
         {
             byte[] bytes = new byte[4];
             bytes[0] = (byte)(x & 0xFF);
@@ -175,7 +175,7 @@ namespace ValkWelding.Welding.PolyTouchApplication.Services
         }
 
 
-        private string checksum(string str)
+        private string Checksum(string str)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(str);
             int result = bytes[0];
@@ -200,7 +200,7 @@ namespace ValkWelding.Welding.PolyTouchApplication.Services
 
         }
 
-        private string toText(float[] point)
+        private string ToText(float[] point)
         {
             return $"{point[0].ToString(CultureInfo.InvariantCulture)}, {point[1].ToString(CultureInfo.InvariantCulture)}, {point[2].ToString(CultureInfo.InvariantCulture)}, {point[3].ToString(CultureInfo.InvariantCulture)}, {point[4].ToString(CultureInfo.InvariantCulture)}, {point[5].ToString(CultureInfo.InvariantCulture)}";
         }

@@ -71,7 +71,7 @@ namespace ValkWelding.Welding.PolyTouchApplication.Services
                 return;
             }
 
-            _cob.sendCobotPos(desPosArray, speed);
+            _cob.SendCobotPos(desPosArray, speed);
             while (!CurrentPosition.EqualPosition(destination, StepSize / 2))
             {
                 // Wait
@@ -87,7 +87,7 @@ namespace ValkWelding.Welding.PolyTouchApplication.Services
                 {
                     await Task.Run(() =>
                     {
-                        float[] currentPos = _cob.readPos();
+                        float[] currentPos = _cob.ReadPos();
                         lock (CurrentPosition)
                         {
                             CurrentPosition = new()

@@ -9,9 +9,9 @@ namespace ValkWelding.Welding.PolyTouchApplication.Services
 
         Task CheckConnection(string ipAddress);
         int ReadError();
-        float[] readPos();
-        void sendCobotMove(float[] point, float speed);
-        void sendCobotPos(float[] point, float speed);
+        float[] ReadPos();
+        void SendCobotMove(float[] point, float speed);
+        void SendCobotPos(float[] point, float speed);
         void SetCoilValue(int address, bool value);
         void StopCobot();
     }
