@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.App">
+    <Position X="18" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEACAABAEA=</HashCode>
+      <FileName>App.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.MainWindow">
+    <Position X="20.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.UserControls.PointListControl">
+    <Position X="18" Y="3.25" Width="2" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAEAAAEACAgAgAAAEACAAQACAAAIAAAAAAA=</HashCode>
+      <FileName>UserControls\PointListControl.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.UserControls.SettingsControl">
+    <Position X="20.25" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAhACARAAEAAAAAgAAAEAAAAAACIAAJAAAAAAA=</HashCode>
+      <FileName>UserControls\SettingsControl.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.Services.CobotConnectionService" BaseTypeListCollapsed="true">
+    <Position X="18" Y="12.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AgAACABAAAAAAAgCAEAAAgAACAAAAAIAwAAjAAAABIA=</HashCode>
+      <FileName>Services\CobotConnectionService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.Services.CobotControllerService" BaseTypeListCollapsed="true">
+    <Position X="20.25" Y="12.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAASAAAKAAAAAAAAAJEEAUAQhAAgCAIAAAAAABAAA=</HashCode>
+      <FileName>Services\CobotControllerService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.Services.DiskManagementService" BaseTypeListCollapsed="true">
+    <Position X="23" Y="12.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAEIAAAAACAAAAQBgAAAAAAYAAAAAAAAA=</HashCode>
+      <FileName>Services\DiskManagementService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.Services.PathPlanningService" BaseTypeListCollapsed="true">
+    <Position X="25.25" Y="12.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAACEaAAIIEAAAAAAAAACACAAAEAAgAIgAAAAAA=</HashCode>
+      <FileName>Services\PathPlanningService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.Services.PositionCalculatorService">
+    <Position X="28" Y="12.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAABADAAAAAAEAAAAQAAAEgAIIAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Services\PositionCalculatorService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.DistanceDetectors.DummyDetector" BaseTypeListCollapsed="true">
+    <Position X="33" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAQAAAAAAAAIAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>DistanceDetectors\DummyDetector.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.DistanceDetectors.TouchDetector" BaseTypeListCollapsed="true">
+    <Position X="31" Y="12.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAQQAAAAAAIIAAAAAAAAAACAAAAAACAAA=</HashCode>
+      <FileName>DistanceDetectors\TouchDetector.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.ViewModels.PointListViewModel">
+    <Position X="20.25" Y="18.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>CAAQICgAAAAAIAEAIAAIAAAAgAAAAAAAAABAAAAAQAA=</HashCode>
+      <FileName>ViewModels\PointListViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.ViewModels.SettingsViewModel">
+    <Position X="18" Y="18.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAABBFAhAACIAAAAIAAAAQAAgAAAACAAQgAAABAAAAA=</HashCode>
+      <FileName>ViewModels\SettingsViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.HelperObjects.CobotPosition">
+    <Position X="20.25" Y="23.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AEACAAAIAAQACAEEoCBAACAAkgAAAIAgAABAQIABYjE=</HashCode>
+      <FileName>HelperObjects\CobotPosition.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.HelperObjects.SettingsModel">
+    <Position X="18" Y="23.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIABIAAAAhAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>HelperObjects\SettingsModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.Configuration.CobotSettings">
+    <Position X="25.25" Y="23.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEgAAAAQAQAAAACAAAAACAgAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Configuration\CobotSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.Configuration.DistanceDetectorSettings">
+    <Position X="28" Y="23.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Configuration\DistanceDetectorSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ValkWelding.Welding.PolyTouchApplication.Configuration.LocalConfig">
+    <Position X="23" Y="23.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Configuration\LocalConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="ValkWelding.Welding.PolyTouchApplication.Services.ICobotConnectionService">
+    <Position X="18" Y="8" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAACAAAAAAAACAAAAAIAwAAjAAAAAAA=</HashCode>
+      <FileName>Services\ICobotConnectionService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ValkWelding.Welding.PolyTouchApplication.Services.ICobotControllerService">
+    <Position X="20.25" Y="8" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAQAAAKAAAAAAAAABEEAAAAgAAgCAIAAAAAABAAA=</HashCode>
+      <FileName>Services\ICobotControllerService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ValkWelding.Welding.PolyTouchApplication.Services.IDiskManagementService">
+    <Position X="23" Y="8" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAIAAAAAAAAAAAAgAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Services\IDiskManagementService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ValkWelding.Welding.PolyTouchApplication.Services.IPathPlanningService">
+    <Position X="25.25" Y="8" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAACAAIAAAAAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Services\IPathPlanningService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ValkWelding.Welding.PolyTouchApplication.DistanceDetectors.IDistanceDetector">
+    <Position X="31" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAIAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>DistanceDetectors\IDistanceDetector.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="ValkWelding.Welding.PolyTouchApplication.Types.DetectorCommand" Collapsed="true">
+    <Position X="30.75" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAIAAAAAAQAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Types\DetectorCommand.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ValkWelding.Welding.PolyTouchApplication.Types.DetectorResponse" Collapsed="true">
+    <Position X="32.75" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAIAAAAAAAAAAAAABAAAAAAABAA=</HashCode>
+      <FileName>Types\DetectorResponse.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ValkWelding.Welding.PolyTouchApplication.Types.MovementDirection" Collapsed="true">
+    <Position X="30.75" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Types\MovementDirection.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ValkWelding.Welding.PolyTouchApplication.Types.PointTypeDefinition" Collapsed="true">
+    <Position X="32.75" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Types\PointTypeDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
