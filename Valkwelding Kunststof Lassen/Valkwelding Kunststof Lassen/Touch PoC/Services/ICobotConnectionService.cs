@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ValkWelding.Welding.Touch_PoC.Services
+namespace ValkWelding.Welding.PolyTouchApplication.Services
 {
     public interface ICobotConnectionService
     {

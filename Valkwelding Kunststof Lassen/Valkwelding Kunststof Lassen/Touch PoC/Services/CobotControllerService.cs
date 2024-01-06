@@ -6,11 +6,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using ValkWelding.Welding.Touch_PoC.Configuration;
-using ValkWelding.Welding.Touch_PoC.HelperObjects;
-using ValkWelding.Welding.Touch_PoC.Types;
+using ValkWelding.Welding.PolyTouchApplication.Configuration;
+using ValkWelding.Welding.PolyTouchApplication.HelperObjects;
+using ValkWelding.Welding.PolyTouchApplication.Types;
 
-namespace ValkWelding.Welding.Touch_PoC.Services
+namespace ValkWelding.Welding.PolyTouchApplication.Services
 {
     public class CobotControllerService : ICobotControllerService
     {

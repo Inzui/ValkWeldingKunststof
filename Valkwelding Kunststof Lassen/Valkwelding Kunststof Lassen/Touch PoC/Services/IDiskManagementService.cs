@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using ValkWelding.Welding.Touch_PoC.HelperObjects;
+using ValkWelding.Welding.PolyTouchApplication.HelperObjects;
 
-namespace ValkWelding.Welding.Touch_PoC.Services
+namespace ValkWelding.Welding.PolyTouchApplication.Services
 {
     public interface IDiskManagementService
     {

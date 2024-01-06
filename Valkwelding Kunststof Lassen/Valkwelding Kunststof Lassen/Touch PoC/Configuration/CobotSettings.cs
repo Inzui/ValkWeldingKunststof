@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ValkWelding.Welding.Touch_PoC.Configuration
+namespace ValkWelding.Welding.PolyTouchApplication.Configuration
 {
     public class CobotSettings
     {

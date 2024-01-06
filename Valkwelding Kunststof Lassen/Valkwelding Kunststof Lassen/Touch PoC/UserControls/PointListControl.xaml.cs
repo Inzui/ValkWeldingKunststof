@@ -15,12 +15,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ValkWelding.Welding.Touch_PoC.DistanceDetectors;
-using ValkWelding.Welding.Touch_PoC.HelperObjects;
-using ValkWelding.Welding.Touch_PoC.Services;
-using ValkWelding.Welding.Touch_PoC.ViewModels;
+using ValkWelding.Welding.PolyTouchApplication.DistanceDetectors;
+using ValkWelding.Welding.PolyTouchApplication.HelperObjects;
+using ValkWelding.Welding.PolyTouchApplication.Services;
+using ValkWelding.Welding.PolyTouchApplication.ViewModels;
 
-namespace ValkWelding.Welding.Touch_PoC.UserControls
+namespace ValkWelding.Welding.PolyTouchApplication.UserControls
 {
     /// <summary>
     /// Interaction logic for PointListControl.xaml

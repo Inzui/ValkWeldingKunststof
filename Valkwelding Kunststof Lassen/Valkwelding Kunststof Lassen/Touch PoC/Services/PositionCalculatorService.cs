@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using ValkWelding.Welding.Touch_PoC.HelperObjects;
-using ValkWelding.Welding.Touch_PoC.Types;
+using ValkWelding.Welding.PolyTouchApplication.HelperObjects;
+using ValkWelding.Welding.PolyTouchApplication.Types;
 using MathNet.Numerics.LinearAlgebra;
 using Microsoft.Extensions.Options;
-using ValkWelding.Welding.Touch_PoC.Configuration;
+using ValkWelding.Welding.PolyTouchApplication.Configuration;
 
-namespace ValkWelding.Welding.Touch_PoC.Services
+namespace ValkWelding.Welding.PolyTouchApplication.Services
 {
     public class PositionCalculatorService
     {

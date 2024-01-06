@@ -5,11 +5,11 @@ using System.IO.Ports;
 using System.Linq;
 using System.Threading;
 using System.Collections.Generic;
-using ValkWelding.Welding.Touch_PoC.Configuration;
-using ValkWelding.Welding.Touch_PoC.Types;
+using ValkWelding.Welding.PolyTouchApplication.Configuration;
+using ValkWelding.Welding.PolyTouchApplication.Types;
 using System.Windows.Controls;
 
-namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
+namespace ValkWelding.Welding.PolyTouchApplication.DistanceDetectors
 {
     public class TouchDetector : IDistanceDetector
     {

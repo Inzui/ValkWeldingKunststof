@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ValkWelding.Welding.Touch_PoC.HelperObjects
+namespace ValkWelding.Welding.PolyTouchApplication.HelperObjects
 {
     public class SettingsModel : INotifyPropertyChanged
     {

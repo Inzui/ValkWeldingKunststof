@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using Modbus.Device;
 using Microsoft.Extensions.Options;
-using ValkWelding.Welding.Touch_PoC.Configuration;
+using ValkWelding.Welding.PolyTouchApplication.Configuration;
 using System.Globalization;
 using System.Diagnostics;
 using System.Threading;
 using System.Net;
 
-namespace ValkWelding.Welding.Touch_PoC.Services
+namespace ValkWelding.Welding.PolyTouchApplication.Services
 {
     public class CobotConnectionService : ICobotConnectionService
     {

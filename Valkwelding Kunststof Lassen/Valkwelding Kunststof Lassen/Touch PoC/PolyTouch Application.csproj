@@ -3,12 +3,12 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <RootNamespace>ValkWelding.Welding.Touch_PoC</RootNamespace>
     <Nullable>disable</Nullable>
     <UseWPF>true</UseWPF>
     <AssemblyName>ValkWelding.Welding.$(MSBuildProjectName)</AssemblyName>
 	<IncludePackageReferencesDuringMarkupCompilation>false</IncludePackageReferencesDuringMarkupCompilation>
 	<ApplicationIcon>Media\icon.ico</ApplicationIcon>
+	<RootNamespace>ValkWelding.Welding.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

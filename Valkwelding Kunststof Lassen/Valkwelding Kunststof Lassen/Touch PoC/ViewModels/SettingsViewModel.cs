@@ -2,10 +2,10 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using ValkWelding.Welding.Touch_PoC.HelperObjects;
-using ValkWelding.Welding.Touch_PoC.Services;
+using ValkWelding.Welding.PolyTouchApplication.HelperObjects;
+using ValkWelding.Welding.PolyTouchApplication.Services;
 
-namespace ValkWelding.Welding.Touch_PoC.ViewModels
+namespace ValkWelding.Welding.PolyTouchApplication.ViewModels
 {
     public class SettingsViewModel : INotifyPropertyChanged
     {

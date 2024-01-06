@@ -6,10 +6,10 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using ValkWelding.Welding.Touch_PoC.HelperObjects;
-using ValkWelding.Welding.Touch_PoC.Types;
+using ValkWelding.Welding.PolyTouchApplication.HelperObjects;
+using ValkWelding.Welding.PolyTouchApplication.Types;
 
-namespace ValkWelding.Welding.Touch_PoC.ViewModels
+namespace ValkWelding.Welding.PolyTouchApplication.ViewModels
 {
     public class PointListViewModel : INotifyPropertyChanged
     {

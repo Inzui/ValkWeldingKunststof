@@ -8,13 +8,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Media.Imaging;
-using ValkWelding.Welding.Touch_PoC.Configuration;
-using ValkWelding.Welding.Touch_PoC.DistanceDetectors;
-using ValkWelding.Welding.Touch_PoC.HelperObjects;
-using ValkWelding.Welding.Touch_PoC.Types;
-using ValkWelding.Welding.Touch_PoC.ViewModels;
+using ValkWelding.Welding.PolyTouchApplication.Configuration;
+using ValkWelding.Welding.PolyTouchApplication.DistanceDetectors;
+using ValkWelding.Welding.PolyTouchApplication.HelperObjects;
+using ValkWelding.Welding.PolyTouchApplication.Types;
+using ValkWelding.Welding.PolyTouchApplication.ViewModels;
 
-namespace ValkWelding.Welding.Touch_PoC.Services
+namespace ValkWelding.Welding.PolyTouchApplication.Services
 {
     public class PathPlanningService : IPathPlanningService
     {

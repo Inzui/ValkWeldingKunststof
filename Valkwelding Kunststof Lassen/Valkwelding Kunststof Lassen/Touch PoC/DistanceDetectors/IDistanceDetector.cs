@@ -1,6 +1,6 @@
-﻿using ValkWelding.Welding.Touch_PoC.Types;
+﻿using ValkWelding.Welding.PolyTouchApplication.Types;
 
-namespace ValkWelding.Welding.Touch_PoC.DistanceDetectors
+namespace ValkWelding.Welding.PolyTouchApplication.DistanceDetectors
 {
     public interface IDistanceDetector
     {

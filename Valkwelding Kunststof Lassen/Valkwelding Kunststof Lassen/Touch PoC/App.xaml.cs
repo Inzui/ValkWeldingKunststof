@@ -7,12 +7,12 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using ValkWelding.Welding.Touch_PoC.Configuration;
-using ValkWelding.Welding.Touch_PoC.DistanceDetectors;
-using ValkWelding.Welding.Touch_PoC.Services;
-using ValkWelding.Welding.Touch_PoC.ViewModels;
+using ValkWelding.Welding.PolyTouchApplication.Configuration;
+using ValkWelding.Welding.PolyTouchApplication.DistanceDetectors;
+using ValkWelding.Welding.PolyTouchApplication.Services;
+using ValkWelding.Welding.PolyTouchApplication.ViewModels;
 
-namespace ValkWelding.Welding.Touch_PoC
+namespace ValkWelding.Welding.PolyTouchApplication
 {
     public partial class App : Application
     {

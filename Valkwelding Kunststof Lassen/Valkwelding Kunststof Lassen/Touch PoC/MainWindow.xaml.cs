@@ -12,11 +12,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ValkWelding.Welding.Touch_PoC.DistanceDetectors;
-using ValkWelding.Welding.Touch_PoC.HelperObjects;
-using ValkWelding.Welding.Touch_PoC.Services;
+using ValkWelding.Welding.PolyTouchApplication.DistanceDetectors;
+using ValkWelding.Welding.PolyTouchApplication.HelperObjects;
+using ValkWelding.Welding.PolyTouchApplication.Services;
 
-namespace ValkWelding.Welding.Touch_PoC
+namespace ValkWelding.Welding.PolyTouchApplication
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -12,9 +12,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using ValkWelding.Welding.Touch_PoC.HelperObjects;
+using ValkWelding.Welding.PolyTouchApplication.HelperObjects;
 
-namespace ValkWelding.Welding.Touch_PoC.Services
+namespace ValkWelding.Welding.PolyTouchApplication.Services
 {
     public class DiskManagementService : IDiskManagementService
     {

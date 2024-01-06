@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ValkWelding.Welding.Touch_PoC.Types
+namespace ValkWelding.Welding.PolyTouchApplication.Types
 {
     public enum DetectorCommand : byte
     {
