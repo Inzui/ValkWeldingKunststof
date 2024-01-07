@@ -18,11 +18,6 @@ namespace ValkWelding.Welding.PolyTouchApplication.DistanceDetectors
             Connected = true;
         }
 
-        public DetectorResponse GetAnswer(DetectorCommand command)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public DetectorResponse SendCommand(DetectorCommand command)
         {
             throw new System.NotImplementedException();
