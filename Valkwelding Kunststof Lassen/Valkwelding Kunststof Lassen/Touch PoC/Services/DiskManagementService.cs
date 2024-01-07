@@ -22,7 +22,7 @@ namespace ValkWelding.Welding.PolyTouchApplication.Services
         private readonly OpenFileDialog _openFileDialog;
         private readonly CsvConfiguration _csvConfig;
         private readonly string _filePath;
-        JsonSerializerOptions _jsonOptions;
+        private readonly JsonSerializerOptions _jsonOptions;
 
         public DiskManagementService()
         {
