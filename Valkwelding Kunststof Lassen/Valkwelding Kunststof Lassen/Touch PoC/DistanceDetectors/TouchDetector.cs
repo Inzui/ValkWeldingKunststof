@@ -13,6 +13,9 @@ namespace ValkWelding.Welding.PolyTouchApplication.DistanceDetectors
 {
     public class TouchDetector : IDistanceDetector
     {
+        /// <summary>
+        /// Indicates whether the connection is established or not.
+        /// </summary>
         public bool Connected { 
             get 
             { 
@@ -36,6 +39,10 @@ namespace ValkWelding.Welding.PolyTouchApplication.DistanceDetectors
             _dataQueue = new();
         }
 
+        /// <summary>
+        /// Reads data from a serial port and processes it.
+        /// The processed data is stored in a dictionary (_dataQueue).
+        /// </summary>
         private void DataReceivedEvent(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort serialPort = (SerialPort)sender;
@@ -62,6 +69,11 @@ namespace ValkWelding.Welding.PolyTouchApplication.DistanceDetectors
             }
         }
 
+        /// <summary>
+        /// Sends a heartbeat command to the detector and checks the response.
+        /// </summary>
+        /// <param name="comPort">The COM port to send the command to.</param>
+        /// <returns>Returns true if the detector responds with success, otherwise returns false.</returns>
         public bool Connect(string comPort)
         {
             if (_serialPort.IsOpen)
@@ -82,6 +94,15 @@ namespace ValkWelding.Welding.PolyTouchApplication.DistanceDetectors
             }
         }
 
+        /// <summary>
+        /// Sends a command to a sensor and waits for a response.
+        /// </summary>
+        /// <param name="command">The command to send to the sensor.</param>
+        /// <returns>The response received from the sensor.</returns>
+        /// <remarks>
+        /// The method sends the command to the sensor and waits for a response. 
+        /// If the response is not received after 50 attempts, the method returns the last known response.
+        /// </remarks>
         public DetectorResponse SendCommand(DetectorCommand command)
         {
             _dataQueue[command] = DetectorResponse.UNKNOWN;

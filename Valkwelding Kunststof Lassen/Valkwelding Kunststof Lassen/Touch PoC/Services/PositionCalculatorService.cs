@@ -18,6 +18,22 @@ namespace ValkWelding.Welding.PolyTouchApplication.Services
             _yawOffset = configuration.Value.CobotSettings.YawOffsetDegrees;
         }
 
+        /// <summary>
+        /// Calculates the corner position between two given positions.
+        /// </summary>
+        /// <param name="positionOne">The first position.</param>
+        /// <param name="positionTwo">The second position.</param>
+        /// <returns>A CobotPosition representing the corner position between the two positions.</returns>
+        /// <remarks>
+        /// This method first calculates the calibrated yaw for both positions.
+        /// It then checks if the calibrated yaw is a multiple of 90 and adjusts it slightly if it is.
+        /// It converts the yaw degrees into a slope for both positions.
+        /// It calculates the b value for the perpendicular line for both positions.
+        /// It calculates the intersection points between the two perpendicular lines.
+        /// It creates a new position where the two perpendicular lines meet and sets the x and y coordinates to the intersection points.
+        /// It calculates a new yaw by taking the average of the old two yaw positions and sets the point type to Dummy.
+        /// Finally, it returns the new position.
+        /// </remarks>
         public CobotPosition GetCornerPosition(CobotPosition positionOne, CobotPosition positionTwo)
         {
             float calibratedYawPositionOne = 450 - positionOne.Yaw + _yawOffset;
@@ -59,11 +75,22 @@ namespace ValkWelding.Welding.PolyTouchApplication.Services
         }
 
         /// <summary>
-        /// 
+        /// Calculates the corner position between two given sets of positions.
         /// </summary>
-        /// <param name="positionsOne">Array of two points</param>
-        /// <param name="positionsTwo">Array of two points</param>
-        /// <returns>Corner Position</returns>
+        /// <param name="positionsOne">The first set of positions.</param>
+        /// <param name="positionsTwo">The second set of positions.</param>
+        /// <returns>A CobotPosition representing the corner position between the two sets of positions.</returns>
+        /// <remarks>
+        /// This method first defines vectors and differences for the first set of positions.
+        /// It then defines vectors and differences for the second set of positions.
+        /// It builds dense matrices and vectors from the defined arrays.
+        /// It defines the coefficients of the system of equations and solves the system.
+        /// It extracts the values of t and s from the solution.
+        /// It calculates the point of intersection and creates a new position where the two perpendicular lines meet.
+        /// It sets the x and y coordinates of the new position to the intersection points.
+        /// It calculates a new yaw by taking the average of the old two yaw positions.
+        /// Finally, it returns the new position.
+        /// </remarks>
         public CobotPosition GetCornerPosition(CobotPosition[] positionsOne, CobotPosition[] positionsTwo)
         {
             double[] dV1 = new double[] { positionsOne[0].X, positionsOne[0].Y };

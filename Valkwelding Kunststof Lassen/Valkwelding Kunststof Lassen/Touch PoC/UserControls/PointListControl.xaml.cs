@@ -47,6 +47,15 @@ namespace ValkWelding.Welding.PolyTouchApplication.UserControls
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Adds a copy of the current Cobot position to the list of positions to measure.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">Routed event data.</param>
+        /// <remarks>
+        /// This method copies the current Cobot position and assigns it an ID equal to the count of positions to measure.
+        /// It then adds the copied position to the list of positions to measure.
+        /// </remarks>
         private void Add_Button_Click(object sender, RoutedEventArgs e)
         {
             CobotPosition selectedPos = _settingsViewModel.CurrentCobotPosition.Copy();
@@ -54,11 +63,30 @@ namespace ValkWelding.Welding.PolyTouchApplication.UserControls
             ViewModel.ToMeasurePositions.Add(selectedPos);
         }
 
+        /// <summary>
+        /// Removes the selected position from the list of positions to measure.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">Routed event data.</param>
+        /// <remarks>
+        /// This method removes the selected position from the list of positions to measure.
+        /// </remarks>
         private void Remove_Button_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.RemovePositionFromList(ViewModel.SelectedPosition);
-        } 
+        }
 
+        /// <summary>
+        /// Imports a list of positions from a file.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">Routed event data.</param>
+        /// <remarks>
+        /// This method first sets the MessageBoxText to "Importing Point List...".
+        /// It then attempts to import a list of positions from a file and assigns it to ToMeasurePositions.
+        /// If an IOException occurs, it sets the MessageBoxText to "Import Failed: file already opened by other process".
+        /// If any other exception occurs, it sets the MessageBoxText to "Import Failed".
+        /// </remarks>
         private void Import_Button_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -75,7 +103,18 @@ namespace ValkWelding.Welding.PolyTouchApplication.UserControls
                 _settingsViewModel.MessageBoxText = "Import Failed";
             }
         }
-        
+
+        /// <summary>
+        /// Exports a list of positions to a file.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">Routed event data.</param>
+        /// <remarks>
+        /// This method first sets the MessageBoxText to "Exporting Point List...".
+        /// It then exports the list of positions to a file.
+        /// If an IOException occurs, it sets the MessageBoxText to "Export Failed: file already opened by other process".
+        /// If any other exception occurs, it sets the MessageBoxText to "Export Failed".
+        /// </remarks>
         private void Export_Button_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -93,7 +132,23 @@ namespace ValkWelding.Welding.PolyTouchApplication.UserControls
                 _settingsViewModel.MessageBoxText = "Export Failed";
             }
         }
-        
+
+        /// <summary>
+        /// Starts the measurement process.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">Routed event data.</param>
+        /// <remarks>
+        /// This method first checks if there are at least two positions to measure.
+        /// If there are, it first checks if the Cobot robot is connected, in run mode, and the sensor is connected. If any of these checks fail, it sets the MessageBoxText accordingly and returns.
+        /// It then disables the start button, buttons, and sets the grid to read-only mode.
+        /// It sets the MessageBoxText to "Returning to starting position..." and runs a task to return the robot to the starting position.
+        /// It sets the MessageBoxText to "Running Measurements..." and runs a task to detect objects at the measure points and adjust their positions.
+        /// It sets the measured positions to the updated positions and enables the start button.
+        /// It sets the MessageBoxText to "Measurements Done".
+        /// If an exception occurs during this process, it sets the MessageBoxText to the exception message.
+        /// Finally, it enables the buttons and disables the grid read-only mode.
+        /// </remarks>
         private async void Start_Button_Click(object sender, RoutedEventArgs e)
         {
             if (ViewModel.ToMeasurePositions.Count >= 2)
